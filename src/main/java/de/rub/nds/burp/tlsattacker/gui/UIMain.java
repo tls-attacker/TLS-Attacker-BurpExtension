@@ -15,6 +15,7 @@ import javax.swing.JTabbedPane;
 public class UIMain extends JTabbedPane {
     
     private final IBurpExtenderCallbacks callbacks;
+    private UIScanner scanner;
     
     public UIMain(IBurpExtenderCallbacks callbacks) {
         this.callbacks = callbacks;
@@ -22,7 +23,9 @@ public class UIMain extends JTabbedPane {
     }
     
     private void initComponents() {
-            
+        scanner = new UIScanner();    
+        this.addTab("Scanner", scanner);
+        callbacks.customizeUiComponent(this); 
     } 
     
 }
