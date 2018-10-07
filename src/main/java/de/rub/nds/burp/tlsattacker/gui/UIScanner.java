@@ -25,12 +25,6 @@ public class UIScanner extends javax.swing.JPanel {
      */
     public UIScanner() {
         initComponents();
-        
-        jTextAreaResult.setText("HALL");
-        StringBuilder builder = new StringBuilder();
-        builder.append("Report for ");
-        builder.append(AnsiColors.ANSI_BLUE + "\n---------------" + "HALLO\n" + AnsiColors.ANSI_RESET);
-        jTextAreaResult.setText(builder.toString());
     }
 
     /**
