@@ -42,6 +42,12 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
+/**
+ * Printer for the SiteReport.
+ * Copied from TLS-Scanner repository. Adapted for javax.swing.JTextPane.
+ * 
+ * @author Nurullah Erinola
+ */
 public class SiteReportPrinter {
 
     private static final Logger LOGGER = LogManager.getLogger(SiteReportPrinter.class.getName());

@@ -18,13 +18,14 @@ import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 
 /**
- *
+ * TLS-Scanner.
+ * 
  * @author Nurullah Erinola
  */
 public class UIScanner extends javax.swing.JPanel {
      
     /**
-     * Creates new form UIScanner
+     * Creates new form UIScanner.
      */
     public UIScanner() {
         initComponents();       
@@ -221,6 +222,7 @@ public class UIScanner extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void initJComboBoxes() {
+        // Init jComboBox for Scan Detail and Report Detail
         ArrayList<String> details = new ArrayList<>();
         details.add(ScannerDetail.ALL.toString());
         details.add(ScannerDetail.DETAILED.toString());
@@ -228,7 +230,8 @@ public class UIScanner extends javax.swing.JPanel {
         jComboBoxScanDetail.setModel(new DefaultComboBoxModel(details.toArray())); 
         jComboBoxScanDetail.setSelectedIndex(2); 
         jComboBoxReportDetail.setModel(new DefaultComboBoxModel(details.toArray())); 
-        jComboBoxReportDetail.setSelectedIndex(2); 
+        jComboBoxReportDetail.setSelectedIndex(2);
+        // Init jComboBox for Danger Level
         ArrayList<String> levels = new ArrayList<>();
         for(int i = 1; i <= 10; i++) {
             levels.add(String.valueOf(i));
@@ -238,6 +241,7 @@ public class UIScanner extends javax.swing.JPanel {
     }
     
     private void jButtonScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonScanActionPerformed
+        // Create config
         ScannerConfig config = new ScannerConfig(new GeneralDelegate());
         config.setDangerLevel(Integer.parseInt((String) jComboBoxDangerLevel.getSelectedItem()));
         config.setThreads(Integer.parseInt(jTextFieldThreads.getText()));
@@ -247,9 +251,10 @@ public class UIScanner extends javax.swing.JPanel {
         config.setScanDetail(ScannerDetail.valueOf((String) jComboBoxScanDetail.getSelectedItem()));
         config.getClientDelegate().setHost(jTextFieldHost.getText());
         config.setNoColor(jCheckBoxNoColor.isSelected());
-        
+        // Init scanner
         TlsScanner scanner = new TlsScanner(config);
         SiteReport report = scanner.scan();  
+        // Print scan result
         SiteReportPrinter printer = new SiteReportPrinter(jTextPaneResult, report, config.getReportDetail());
         printer.printFullReport();
     }//GEN-LAST:event_jButtonScanActionPerformed

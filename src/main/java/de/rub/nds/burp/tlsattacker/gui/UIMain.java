@@ -9,22 +9,30 @@ import burp.IBurpExtenderCallbacks;
 import javax.swing.JTabbedPane;
 
 /**
- *
+ * The main window.
+ * 
  * @author Nurullah Erinola
  */
 public class UIMain extends JTabbedPane {
     
-    private final IBurpExtenderCallbacks callbacks;
+    private final IBurpExtenderCallbacks callbacks; 
     private UIScanner scanner;
-    
+ 
+    /**
+     * Construct the main UI.
+     * @param callbacks
+     */
     public UIMain(IBurpExtenderCallbacks callbacks) {
         this.callbacks = callbacks;
         initComponents();  
     }
     
     private void initComponents() {
+        //register all components on the extension tab
         scanner = new UIScanner();    
         this.addTab("Scanner", scanner);
+        
+        // Customize the UI components
         callbacks.customizeUiComponent(this); 
     } 
     

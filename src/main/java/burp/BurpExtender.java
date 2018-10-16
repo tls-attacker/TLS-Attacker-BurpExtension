@@ -10,7 +10,9 @@ import java.io.PrintWriter;
 import java.time.LocalTime;
 
 /**
- *
+ * The first class called by Burp Suite.
+ * This is the starting class for all other functionalities.
+ * 
  * @author Nurullah Erinola
  */
 public class BurpExtender implements IBurpExtender {
@@ -21,9 +23,15 @@ public class BurpExtender implements IBurpExtender {
     private static PrintWriter stdout;
     private static PrintWriter stderr;
 
+    
+    /**
+     * Register all new functions like for the internals and GUI.
+     */
     @Override
     public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks) {
-        callbacks.setExtensionName(EXTENSION_NAME);        
+        // Set extension name
+        callbacks.setExtensionName(EXTENSION_NAME);   
+        // Oprain streans
         stdout = new PrintWriter(callbacks.getStdout(), true);
         stderr = new PrintWriter(callbacks.getStderr(), true);
     
@@ -34,6 +42,7 @@ public class BurpExtender implements IBurpExtender {
         stdout.println("|      Started @ "+time+"      |");
         stdout.println("+------------------------------+");
         
+        // Register a new Tab
         tab = new UITab(callbacks);        
     }
     
