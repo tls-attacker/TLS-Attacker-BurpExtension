@@ -558,7 +558,7 @@ public class SiteReportPrinter {
             append("Unknown");
         } else {
             if(value == Boolean.TRUE && report.isNoColour() == false) {
-                appendWithColor(Color.GREEN, value.toString());
+                appendWithColor(Colors.DARK_GREEN, value.toString());
             } else {
                 append(value.toString());
             }
@@ -572,7 +572,7 @@ public class SiteReportPrinter {
             append("Unknown");
         } else {
             if(value == Boolean.FALSE && report.isNoColour() == false) {
-                appendWithColor(Color.GREEN, value.toString());
+                appendWithColor(Colors.DARK_GREEN, value.toString());
             } else {
                 append(value.toString());
             }
@@ -586,7 +586,7 @@ public class SiteReportPrinter {
             append("Unknown");
         } else {
             if(value == Boolean.TRUE && report.isNoColour() == false) {
-                appendWithColor(Color.RED, value.toString());
+                appendWithColor(Colors.DARK_RED, value.toString());
             } else {
                 append(value.toString());
             }
@@ -600,7 +600,7 @@ public class SiteReportPrinter {
             append("Unknown");
         } else {
             if(value == Boolean.FALSE && report.isNoColour() == false) {
-                appendWithColor(Color.RED, value.toString());
+                appendWithColor(Colors.DARK_RED, value.toString());
             } else {
                 append(value.toString());
             }
@@ -614,7 +614,7 @@ public class SiteReportPrinter {
             append("Unknown");
         } else {
             if(value == Boolean.FALSE && report.isNoColour() == false) {
-                appendWithColor(Color.YELLOW, value.toString());
+                appendWithColor(Colors.LIGHT_ORANGE, value.toString());
             } else {
                 append(value.toString());
             }
@@ -628,7 +628,7 @@ public class SiteReportPrinter {
             append("Unknown");
         } else {
             if(value == Boolean.TRUE && report.isNoColour() == false) {
-                appendWithColor(Color.YELLOW, value.toString());
+                appendWithColor(Colors.LIGHT_ORANGE, value.toString());
             } else {
                 append(value.toString());
             }
@@ -643,9 +643,9 @@ public class SiteReportPrinter {
         } else {
             if(report.isNoColour() == false) {
                 if(value == Boolean.TRUE) {
-                    appendWithColor(Color.GREEN, value.toString());
+                    appendWithColor(Colors.DARK_GREEN, value.toString());
                 } else {
-                    appendWithColor(Color.RED, value.toString());
+                    appendWithColor(Colors.DARK_RED, value.toString());
                 }
             } else {
                 append(value.toString());
@@ -661,9 +661,9 @@ public class SiteReportPrinter {
         } else {
             if(report.isNoColour() == false) {
                 if(value == Boolean.TRUE) {
-                    appendWithColor(Color.RED, value.toString());
+                    appendWithColor(Colors.DARK_RED, value.toString());
                 } else {
-                    appendWithColor(Color.GREEN, value.toString());
+                    appendWithColor(Colors.DARK_GREEN, value.toString());
                 }
             } else {
                 append(value.toString());
@@ -679,9 +679,9 @@ public class SiteReportPrinter {
         } else {
             if(report.isNoColour() == false) {
                 if(value == Boolean.TRUE) {
-                    appendWithColor(Color.GREEN, value.toString());
+                    appendWithColor(Colors.DARK_GREEN, value.toString());
                 } else {
-                    appendWithColor(Color.YELLOW, value.toString());
+                    appendWithColor(Colors.LIGHT_ORANGE, value.toString());
                 }
             } else {
                 append(value.toString());
@@ -692,7 +692,7 @@ public class SiteReportPrinter {
 
     private void prettyAppendYellow(String value) {
         if(report.isNoColour() == false) {
-            appendWithColor(Color.YELLOW, value);
+            appendWithColor(Colors.LIGHT_ORANGE, value);
         } else {
             append(value);
         }
@@ -701,7 +701,7 @@ public class SiteReportPrinter {
 
     private void prettyAppendRed(String value) {
         if(report.isNoColour() == false) {
-            appendWithColor(Color.RED, value);
+            appendWithColor(Colors.DARK_RED, value);
         } else {
             append(value);
         }
@@ -711,7 +711,7 @@ public class SiteReportPrinter {
     private void prettyAppendRed(String name, String value) {
         append(addIndentations(name) + ": ");
         if(report.isNoColour() == false) {
-            appendWithColor(Color.RED, value);
+            appendWithColor(Colors.DARK_RED, value);
         } else {
             append(value);
         }
@@ -720,7 +720,7 @@ public class SiteReportPrinter {
 
     private void prettyAppendGreen(String value) {
         if(report.isNoColour() == false) {
-            appendWithColor(Color.GREEN, value);
+            appendWithColor(Colors.DARK_GREEN, value);
         } else {
             append(value);
         }
@@ -730,7 +730,7 @@ public class SiteReportPrinter {
     private void prettyAppendGreen(String name, String value) {
         append(addIndentations(name) + ": ");
         if(report.isNoColour() == false) {
-            appendWithColor(Color.GREEN, value);
+            appendWithColor(Colors.DARK_GREEN, value);
         } else {
             append(value);
         }
@@ -739,7 +739,7 @@ public class SiteReportPrinter {
 
     private void prettyAppendHeading(String value) {
         if(report.isNoColour() == false) {
-            appendWithColor(Color.blue, "\n--------------------------------------------------------\n" + value + "\n\n");
+            appendWithColor(Colors.DARK_BLUE, "\n--------------------------------------------------------\n" + value + "\n\n");
         } else {
             append("\n--------------------------------------------------------\n" + value + "\n\n");
         }
@@ -793,20 +793,23 @@ public class SiteReportPrinter {
 
     private void prettyAppendCheckPattern(String value, CheckPattern pattern) {
         if (pattern == null) {
-            append(value);
+            append(addIndentations(value));
             append(": Unknown\n");
             return;
         }
-        append(value);
+        append(addIndentations(value));
         append(": ");
         switch (pattern.getType()) {
             case CORRECT:
                 prettyAppendGreen(pattern.toString());
+                break;
             case NONE:
             case PARTIAL:
                 prettyAppendRed(pattern.toString());
+                break;
             case UNKNOWN:
                 prettyAppend(pattern.toString());
+                break;
             default:
                 throw new IllegalArgumentException("Unkown MacCheckPattern Type: " + pattern.getType());
         }
@@ -856,7 +859,7 @@ public class SiteReportPrinter {
         pane.setEditable(true);
         StyleContext sc = StyleContext.getDefaultStyleContext();
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, color);
-        int len = pane.getDocument().getLength(); ;
+        int len = pane.getDocument().getLength();
         pane.setCaretPosition(len); 
         pane.setCharacterAttributes(aset, false);
         pane.replaceSelection(string);
@@ -864,6 +867,6 @@ public class SiteReportPrinter {
     }
 
     private void append(String string) {
-        appendWithColor(Color.black, string);
+        appendWithColor(Color.BLACK, string);
     }
 }
