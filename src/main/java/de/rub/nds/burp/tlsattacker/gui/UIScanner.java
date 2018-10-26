@@ -5,6 +5,8 @@
  */
 package de.rub.nds.burp.tlsattacker.gui;
 
+import burp.IContextMenuFactory;
+import burp.IContextMenuInvocation;
 import de.rub.nds.burp.utilities.SiteReportPrinter;
 import de.rub.nds.tlsattacker.core.config.delegate.GeneralDelegate;
 import de.rub.nds.tlsscanner.TlsScanner;
@@ -14,15 +16,19 @@ import de.rub.nds.tlsscanner.report.SiteReport;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenuItem;
 
 /**
  * TLS-Scanner.
  * 
  * @author Nurullah Erinola
  */
-public class UIScanner extends javax.swing.JPanel {
+public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory {
      
     /**
      * Creates new form UIScanner.
@@ -240,17 +246,39 @@ public class UIScanner extends javax.swing.JPanel {
         jComboBoxDangerLevel.setSelectedIndex(9); 
     }
     
+    /**
+     * Add new menu item to context menu.
+     */
+    @Override
+    public List<JMenuItem> createMenuItems(IContextMenuInvocation contextMenuInvocation) {
+        List<JMenuItem> menuList = new ArrayList<>();
+        JMenuItem jMenuItemSendToScanner = new JCheckBoxMenuItem("Send to TLS-Scanner");
+        jMenuItemSendToScanner.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                // Set selected Host
+                jTextFieldHost.setText(contextMenuInvocation.getSelectedMessages()[0].getHttpService().getHost());
+            }
+        });
+        menuList.add(jMenuItemSendToScanner);
+        return menuList;
+    }
+    
     private void jButtonScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonScanActionPerformed
         // Create config
         ScannerConfig config = new ScannerConfig(new GeneralDelegate());
-        config.setDangerLevel(Integer.parseInt((String) jComboBoxDangerLevel.getSelectedItem()));
-        config.setThreads(Integer.parseInt(jTextFieldThreads.getText()));
-        config.setAggroLevel(Integer.parseInt(jTextFieldAggroLevel.getText()));
-        config.setImplementation(jCheckBoxImplementation.isSelected());
-        config.setReportDetail(ScannerDetail.valueOf((String) jComboBoxReportDetail.getSelectedItem()));
-        config.setScanDetail(ScannerDetail.valueOf((String) jComboBoxScanDetail.getSelectedItem()));
-        config.getClientDelegate().setHost(jTextFieldHost.getText());
-        config.setNoColor(jCheckBoxNoColor.isSelected());
+        config.setThreads(4);
+        config.setAggroLevel(100);
+        if(!jCheckBoxDefaultSetting.isSelected()) {
+            config.setDangerLevel(Integer.parseInt((String) jComboBoxDangerLevel.getSelectedItem()));
+            config.setThreads(Integer.parseInt(jTextFieldThreads.getText()));
+            config.setAggroLevel(Integer.parseInt(jTextFieldAggroLevel.getText()));
+            config.setImplementation(jCheckBoxImplementation.isSelected());
+            config.setReportDetail(ScannerDetail.valueOf((String) jComboBoxReportDetail.getSelectedItem()));
+            config.setScanDetail(ScannerDetail.valueOf((String) jComboBoxScanDetail.getSelectedItem()));
+            config.getClientDelegate().setHost(jTextFieldHost.getText());
+            config.setNoColor(jCheckBoxNoColor.isSelected());
+        }
         // Init scanner
         TlsScanner scanner = new TlsScanner(config);
         SiteReport report = scanner.scan();  

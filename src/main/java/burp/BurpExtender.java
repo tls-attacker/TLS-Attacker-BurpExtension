@@ -43,7 +43,10 @@ public class BurpExtender implements IBurpExtender {
         stdout.println("+------------------------------+");
         
         // Register a new Tab
-        tab = new UITab(callbacks);        
+        tab = new UITab(callbacks);
+        
+        // Register a new context menu item
+        callbacks.registerContextMenuFactory(tab.getUiComponent().getScanner());
     }
     
 }

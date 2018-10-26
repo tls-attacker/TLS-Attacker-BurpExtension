@@ -34,7 +34,7 @@ public class UITab implements ITab {
      * @return Get the UI component that should be registered at the Burp Suite GUI. 
      */
     @Override
-    public Component getUiComponent() {
+    public UIMain getUiComponent() {
         return main;
     }
 

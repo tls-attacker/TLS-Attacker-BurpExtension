@@ -30,10 +30,13 @@ public class UIMain extends JTabbedPane {
     private void initComponents() {
         //register all components on the extension tab
         scanner = new UIScanner();    
-        this.addTab("Scanner", scanner);
+        this.addTab("TLS-Scanner", scanner);
         
         // Customize the UI components
         callbacks.customizeUiComponent(this); 
     } 
     
+    public UIScanner getScanner(){
+        return scanner;
+    }
 }
