@@ -1,0 +1,6 @@
+TLS-Attacker-BurpExtension
+
+Copyright 2018 Ruhr University Bochum / Hackmanit GmbH
+
+Licensed under Apache License 2.0
+http://www.apache.org/licenses/LICENSE-2.0/
