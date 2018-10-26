@@ -278,7 +278,9 @@
       <SubComponents>
         <Component class="javax.swing.JTextPane" name="jTextPaneResult">
           <Properties>
-            <Property name="editable" type="boolean" value="false"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Monospaced" size="12" style="0"/>
+            </Property>
           </Properties>
         </Component>
       </SubComponents>

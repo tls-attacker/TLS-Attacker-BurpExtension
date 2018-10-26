@@ -41,6 +41,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Printer for the SiteReport.
@@ -275,13 +276,14 @@ public class SiteReportPrinter {
             prettyAppend("No Testresults");
         } else {
             for (PaddingOracleTestResult testResult : report.getPaddingOracleTestResultList()) {
-                String resultString = "" + padToLength(testResult.getSuite().name(), 40) + ":" + testResult.getVersion() + "\t" + testResult.getVectorGeneratorType() + "\t" + testResult.getRecordGeneratorType();
+                String resultString = padToLength(testResult.getSuite().name(), 40) + ": " + testResult.getVersion() + "   " 
+                        + testResult.getVectorGeneratorType() + "   " + testResult.getRecordGeneratorType();
                 if (testResult.getVulnerable() == Boolean.TRUE) {
-                    prettyAppendRed(resultString + "\t - " + testResult.getEqualityError() + "  VULNERABLE");
+                    prettyAppendRed(resultString + "   - " + testResult.getEqualityError() + "   VULNERABLE");
                 } else if (testResult.getVulnerable() == Boolean.FALSE) {
-                    prettyAppendGreen(resultString + "\t - No Behavior Difference");
+                    prettyAppendGreen(resultString + "   - No Behavior Difference");
                 } else {
-                    prettyAppendYellow(resultString + "\t # Error during Scan");
+                    prettyAppendYellow(resultString + "   # Error during Scan");
                 }
 
                 if (detail == ScannerDetail.DETAILED || detail == ScannerDetail.ALL) {
@@ -826,17 +828,7 @@ public class SiteReportPrinter {
     private String addIndentations(String value) {
         StringBuilder builder = new StringBuilder();
         builder.append(value);
-        if (value.length() < 8) {
-            builder.append("\t\t\t\t ");
-        } else if (value.length() < 16) {
-            builder.append("\t\t\t ");
-        } else if (value.length() < 24) {
-            builder.append("\t\t ");
-        } else if (value.length() < 32) {
-            builder.append("\t ");
-        } else {
-            builder.append(" ");
-        }
+        builder.append(StringUtils.rightPad("", 40-value.length()));
         return builder.toString();
     }
 
