@@ -137,6 +137,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
             }
         });
 
+        jTextPaneResult.setEditable(false);
         jTextPaneResult.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
         jScrollPaneResult.setViewportView(jTextPaneResult);
 

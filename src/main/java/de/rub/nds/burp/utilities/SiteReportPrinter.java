@@ -276,7 +276,7 @@ public class SiteReportPrinter {
             prettyAppend("No Testresults");
         } else {
             for (PaddingOracleTestResult testResult : report.getPaddingOracleTestResultList()) {
-                String resultString = padToLength(testResult.getSuite().name(), 40) + ": " + testResult.getVersion() + "   " 
+                String resultString = addIndentations(testResult.getSuite().name()) + ": " + testResult.getVersion() + "   " 
                         + testResult.getVectorGeneratorType() + "   " + testResult.getRecordGeneratorType();
                 if (testResult.getVulnerable() == Boolean.TRUE) {
                     prettyAppendRed(resultString + "   - " + testResult.getEqualityError() + "   VULNERABLE");
@@ -826,10 +826,7 @@ public class SiteReportPrinter {
     }
 
     private String addIndentations(String value) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(value);
-        builder.append(StringUtils.rightPad("", 40-value.length()));
-        return builder.toString();
+        return padToLength(value, 40);
     }
 
     private void appendTls13Groups() {
