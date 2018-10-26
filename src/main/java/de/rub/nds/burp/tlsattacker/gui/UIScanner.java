@@ -267,6 +267,8 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
     private void jButtonScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonScanActionPerformed
         // Create config
         ScannerConfig config = new ScannerConfig(new GeneralDelegate());
+        config.getClientDelegate().setHost(jTextFieldHost.getText());
+        config.setNoColor(jCheckBoxNoColor.isSelected());
         config.setThreads(4);
         config.setAggroLevel(100);
         if(!jCheckBoxDefaultSetting.isSelected()) {
@@ -276,8 +278,6 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
             config.setImplementation(jCheckBoxImplementation.isSelected());
             config.setReportDetail(ScannerDetail.valueOf((String) jComboBoxReportDetail.getSelectedItem()));
             config.setScanDetail(ScannerDetail.valueOf((String) jComboBoxScanDetail.getSelectedItem()));
-            config.getClientDelegate().setHost(jTextFieldHost.getText());
-            config.setNoColor(jCheckBoxNoColor.isSelected());
         }
         // Init scanner
         TlsScanner scanner = new TlsScanner(config);
