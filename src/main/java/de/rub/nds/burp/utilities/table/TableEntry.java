@@ -27,6 +27,7 @@ public class TableEntry {
     private String noColor;
     private String scanDetail;
     private String reportDetail;
+    private String starTls;
 
     /**
      * Construct a new table entry.
@@ -41,6 +42,7 @@ public class TableEntry {
         this.noColor = Boolean.toString(config.isNoColor());
         this.scanDetail = config.getScanDetail().toString();
         this.reportDetail = config.getReportDetail().toString();
+        this.starTls = config.getStarttlsDelegate().toString();
     }
     
     public SiteReport getSiteReport() {
@@ -77,5 +79,9 @@ public class TableEntry {
     
     public String getReportDetail() {
         return reportDetail;
+    }
+    
+    public String getStarTls() {
+        return starTls;
     }
 }

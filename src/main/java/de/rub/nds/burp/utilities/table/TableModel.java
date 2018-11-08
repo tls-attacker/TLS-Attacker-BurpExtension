@@ -19,7 +19,7 @@ import javax.swing.table.AbstractTableModel;
 public class TableModel extends AbstractTableModel{
     
     private ArrayList<TableEntry> list;
-    private String[] columnNames = {"#","Host","Scan Detail","Report Detail","Danger Level","Implementation","No color"};
+    private String[] columnNames = {"#", "Host", "Scan Detail", "Report Detail", "Danger Level", "StarTLS", "Implementation", "No color"};
 
     /**
      * Construct a new Table Helper
@@ -119,8 +119,10 @@ public class TableModel extends AbstractTableModel{
             case 4:
                 return entry.getDanger();
             case 5:
-                return entry.getImplementation();   
+                return entry.getStarTls();
             case 6:
+                return entry.getImplementation();   
+            case 7:
                 return entry.getNoColor();
             default:
                 return null;

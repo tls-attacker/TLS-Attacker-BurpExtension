@@ -12,6 +12,7 @@ import burp.IContextMenuFactory;
 import burp.IContextMenuInvocation;
 import de.rub.nds.burp.utilities.SiteReportPrinter;
 import de.rub.nds.tlsattacker.core.config.delegate.GeneralDelegate;
+import de.rub.nds.tlsattacker.core.constants.StarttlsType;
 import de.rub.nds.tlsscanner.TlsScanner;
 import de.rub.nds.tlsscanner.config.ScannerConfig;
 import de.rub.nds.tlsscanner.constants.ScannerDetail;
@@ -73,6 +74,8 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         jCheckBoxDefaultSetting = new javax.swing.JCheckBox();
         jScrollPaneResult = new javax.swing.JScrollPane();
         jTextPaneResult = new javax.swing.JTextPane();
+        jCheckBoxStarTls = new javax.swing.JCheckBox();
+        jComboBoxStarTLS = new javax.swing.JComboBox<>();
 
         jButtonScan.setText("Scan");
         jButtonScan.addActionListener(new java.awt.event.ActionListener() {
@@ -123,13 +126,10 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         jTextFieldAggroLevel.setToolTipText("Enter numbers only.");
         jTextFieldAggroLevel.setEnabled(false);
 
-        jComboBoxDangerLevel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxDangerLevel.setEnabled(false);
 
-        jComboBoxReportDetail.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxReportDetail.setEnabled(false);
 
-        jComboBoxScanDetail.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxScanDetail.setEnabled(false);
 
         jCheckBoxNoColor.setText("No color");
@@ -147,6 +147,15 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         jTextPaneResult.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
         jScrollPaneResult.setViewportView(jTextPaneResult);
 
+        jCheckBoxStarTls.setText("Scan STARTLS:");
+        jCheckBoxStarTls.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxStarTlsActionPerformed(evt);
+            }
+        });
+
+        jComboBoxStarTLS.setEnabled(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -154,6 +163,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPaneResult, javax.swing.GroupLayout.DEFAULT_SIZE, 799, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -169,29 +179,32 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                                     .addComponent(jLabel1))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jCheckBoxDefaultSetting)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jCheckBoxNoColor))
                                     .addComponent(jTextFieldHost, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jTextFieldThreads)
                                             .addComponent(jComboBoxScanDetail, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jComboBoxDangerLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(jComboBoxDangerLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jTextFieldThreads, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel4)
                                             .addComponent(jLabel7))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jComboBoxReportDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(jTextFieldAggroLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(18, 18, 18)
-                                                .addComponent(jCheckBoxImplementation)))))))
-                        .addGap(0, 177, Short.MAX_VALUE))
-                    .addComponent(jScrollPaneResult))
+                                                .addComponent(jCheckBoxImplementation))
+                                            .addComponent(jComboBoxReportDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jCheckBoxDefaultSetting)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jCheckBoxNoColor))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jCheckBoxStarTls)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jComboBoxStarTLS, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -201,11 +214,15 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextFieldHost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCheckBoxDefaultSetting)
                     .addComponent(jCheckBoxNoColor))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxStarTls)
+                    .addComponent(jComboBoxStarTLS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jTextFieldThreads, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -222,34 +239,41 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBoxDangerLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(19, 19, 19)
                 .addComponent(jButtonScan)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jButtonCopy))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneResult, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
+                .addComponent(jScrollPaneResult, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
     
     private void initJComboBoxes() {
+        // Init jComboBox for STARTLS protocol selection
+        ArrayList<String> list = new ArrayList<>();
+        list.add(StarttlsType.FTP.toString());
+        list.add(StarttlsType.IMAP.toString());
+        list.add(StarttlsType.POP3.toString());
+        list.add(StarttlsType.SMTP.toString());
+        jComboBoxStarTLS.setModel(new DefaultComboBoxModel(list.toArray()));
         // Init jComboBox for Scan Detail and Report Detail
-        ArrayList<String> details = new ArrayList<>();
-        details.add(ScannerDetail.ALL.toString());
-        details.add(ScannerDetail.DETAILED.toString());
-        details.add(ScannerDetail.NORMAL.toString());
-        jComboBoxScanDetail.setModel(new DefaultComboBoxModel(details.toArray())); 
+        list = new ArrayList<>();
+        list.add(ScannerDetail.ALL.toString());
+        list.add(ScannerDetail.DETAILED.toString());
+        list.add(ScannerDetail.NORMAL.toString());
+        jComboBoxScanDetail.setModel(new DefaultComboBoxModel(list.toArray())); 
         jComboBoxScanDetail.setSelectedIndex(2); 
-        jComboBoxReportDetail.setModel(new DefaultComboBoxModel(details.toArray())); 
+        jComboBoxReportDetail.setModel(new DefaultComboBoxModel(list.toArray())); 
         jComboBoxReportDetail.setSelectedIndex(2);
         // Init jComboBox for Danger Level
-        ArrayList<String> levels = new ArrayList<>();
+        list = new ArrayList<>();
         for(int i = 1; i <= 10; i++) {
-            levels.add(String.valueOf(i));
+            list.add(String.valueOf(i));
         }
-        jComboBoxDangerLevel.setModel(new DefaultComboBoxModel(levels.toArray())); 
+        jComboBoxDangerLevel.setModel(new DefaultComboBoxModel(list.toArray())); 
         jComboBoxDangerLevel.setSelectedIndex(9); 
     }
     
@@ -285,6 +309,9 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
             config.setImplementation(jCheckBoxImplementation.isSelected());
             config.setReportDetail(ScannerDetail.valueOf((String) jComboBoxReportDetail.getSelectedItem()));
             config.setScanDetail(ScannerDetail.valueOf((String) jComboBoxScanDetail.getSelectedItem()));
+        }
+        if(jCheckBoxStarTls.isSelected()) {
+            config.getStarttlsDelegate().setStarttlsType(StarttlsType.valueOf((String) jComboBoxStarTLS.getSelectedItem()));
         }
         // Init scanner and start scan
         TlsScanner scanner = new TlsScanner(config);
@@ -322,6 +349,14 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         }
     }//GEN-LAST:event_jCheckBoxDefaultSettingActionPerformed
 
+    private void jCheckBoxStarTlsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxStarTlsActionPerformed
+        if(jCheckBoxStarTls.isSelected()) {
+            jComboBoxStarTLS.setEnabled(true);
+        } else {
+            jComboBoxStarTLS.setEnabled(false);
+        }
+    }//GEN-LAST:event_jCheckBoxStarTlsActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCopy;
@@ -329,9 +364,11 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
     private javax.swing.JCheckBox jCheckBoxDefaultSetting;
     private javax.swing.JCheckBox jCheckBoxImplementation;
     private javax.swing.JCheckBox jCheckBoxNoColor;
+    private javax.swing.JCheckBox jCheckBoxStarTls;
     private javax.swing.JComboBox<String> jComboBoxDangerLevel;
     private javax.swing.JComboBox<String> jComboBoxReportDetail;
     private javax.swing.JComboBox<String> jComboBoxScanDetail;
+    private javax.swing.JComboBox<String> jComboBoxStarTLS;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
