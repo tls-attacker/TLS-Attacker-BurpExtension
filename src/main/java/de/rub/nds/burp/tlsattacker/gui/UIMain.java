@@ -20,6 +20,7 @@ public class UIMain extends JTabbedPane {
     
     private final IBurpExtenderCallbacks callbacks; 
     private UIScanner scanner;
+    private UIScanHistory scanHistory;
  
     /**
      * Construct the main UI.
@@ -32,8 +33,10 @@ public class UIMain extends JTabbedPane {
     
     private void initComponents() {
         //register all components on the extension tab
-        scanner = new UIScanner();    
+        scanHistory = new UIScanHistory();
+        scanner = new UIScanner(scanHistory);    
         this.addTab("TLS-Scanner", scanner);
+        this.addTab("Scan History", scanHistory);
         
         // Customize the UI components
         callbacks.customizeUiComponent(this); 

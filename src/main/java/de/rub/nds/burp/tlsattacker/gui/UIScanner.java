@@ -33,12 +33,15 @@ import javax.swing.JMenuItem;
  */
 public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory {
      
+    private UIScanHistory scanHistory;
+    
     /**
      * Creates new form UIScanner.
      */
-    public UIScanner() {
+    public UIScanner(UIScanHistory scanHistory) {
         initComponents();       
         initJComboBoxes();
+        this.scanHistory = scanHistory;
     }
 
     /**
@@ -86,7 +89,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         jLabel3.setText("Result:");
 
         jButtonCopy.setText("Copy");
-        jButtonCopy.setToolTipText("Copy result to clipboard.");
+        jButtonCopy.setToolTipText("Copy report to clipboard.");
         jButtonCopy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCopyActionPerformed(evt);
@@ -187,7 +190,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                                                 .addComponent(jTextFieldAggroLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(18, 18, 18)
                                                 .addComponent(jCheckBoxImplementation)))))))
-                        .addGap(0, 109, Short.MAX_VALUE))
+                        .addGap(0, 177, Short.MAX_VALUE))
                     .addComponent(jScrollPaneResult))
                 .addContainerGap())
         );
@@ -230,7 +233,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void initJComboBoxes() {
         // Init jComboBox for Scan Detail and Report Detail
         ArrayList<String> details = new ArrayList<>();
@@ -283,12 +286,15 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
             config.setReportDetail(ScannerDetail.valueOf((String) jComboBoxReportDetail.getSelectedItem()));
             config.setScanDetail(ScannerDetail.valueOf((String) jComboBoxScanDetail.getSelectedItem()));
         }
-        // Init scanner
+        // Init scanner and start scan
         TlsScanner scanner = new TlsScanner(config);
-        SiteReport report = scanner.scan();  
+        SiteReport report = scanner.scan();
         // Print scan result
         SiteReportPrinter printer = new SiteReportPrinter(jTextPaneResult, report, config.getReportDetail());
         printer.printFullReport();
+        jTextPaneResult.setCaretPosition(0);
+        // Send config and report to scan history
+        scanHistory.add(config, report);
     }//GEN-LAST:event_jButtonScanActionPerformed
 
     private void jButtonCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCopyActionPerformed
