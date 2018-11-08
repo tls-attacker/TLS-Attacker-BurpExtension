@@ -19,7 +19,7 @@ import javax.swing.table.AbstractTableModel;
 public class TableModel extends AbstractTableModel{
     
     private ArrayList<TableEntry> list;
-    private String[] columnNames = {"#", "Host", "Scan Detail", "Report Detail", "Danger Level", "StarTLS", "Implementation", "No color"};
+    private String[] columnNames = {"#", "Host", "Scan Detail", "Report Detail", "Danger Level", "STARTLS", "Implementation", "No color"};
 
     /**
      * Construct a new Table Helper
