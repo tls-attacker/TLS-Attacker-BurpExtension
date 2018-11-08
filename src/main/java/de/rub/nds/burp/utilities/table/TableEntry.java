@@ -42,7 +42,7 @@ public class TableEntry {
         this.noColor = Boolean.toString(config.isNoColor());
         this.scanDetail = config.getScanDetail().toString();
         this.reportDetail = config.getReportDetail().toString();
-        this.starTls = config.getStarttlsDelegate().toString();
+        this.starTls = config.getStarttlsDelegate().getStarttlsType().toString();
     }
     
     public SiteReport getSiteReport() {
