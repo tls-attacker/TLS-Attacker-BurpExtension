@@ -26,6 +26,7 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
+import javax.swing.SwingWorker;
 
 /**
  * TLS-Scanner.
@@ -313,15 +314,32 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         if(jCheckBoxStarTls.isSelected()) {
             config.getStarttlsDelegate().setStarttlsType(StarttlsType.valueOf((String) jComboBoxStarTLS.getSelectedItem()));
         }
-        // Init scanner and start scan
-        TlsScanner scanner = new TlsScanner(config);
-        SiteReport report = scanner.scan();
-        // Print scan result
-        SiteReportPrinter printer = new SiteReportPrinter(jTextPaneResult, report, config.getReportDetail());
-        printer.printFullReport();
-        jTextPaneResult.setCaretPosition(0);
-        // Send config and report to scan history
-        scanHistory.add(config, report);
+        // Clarify scan start
+        jTextPaneResult.setText("Scanning " + config.getClientDelegate().getHost() + " - please be patient...");
+        jButtonScan.setEnabled(false); 
+        // Use SwingWorker to execute scan in backround
+        SwingWorker<Boolean, Integer> worker = new SwingWorker<Boolean, Integer>() {           
+            SiteReport report;
+            
+            @Override
+            protected Boolean doInBackground() throws Exception {
+                // Init scanner and start scan
+                TlsScanner scanner = new TlsScanner(config);
+                report = scanner.scan();             
+                return true;
+            }
+            @Override
+            protected void done() {
+                jButtonScan.setEnabled(true);  
+                // Print scan result
+                SiteReportPrinter printer = new SiteReportPrinter(jTextPaneResult, report, config.getReportDetail());
+                printer.printFullReport();
+                jTextPaneResult.setCaretPosition(0);
+                // Send config and report to scan history
+                scanHistory.add(config, report);
+            }
+        };
+        worker.execute();
     }//GEN-LAST:event_jButtonScanActionPerformed
 
     private void jButtonCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCopyActionPerformed
