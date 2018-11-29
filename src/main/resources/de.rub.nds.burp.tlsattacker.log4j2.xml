@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" name="de.rub.nds.burp.tlsattacker">
+    <Appenders>
+        <!--Prints the progressbar to console-->
+        <!--<Console name="console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout
+                    pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+        </Console>-->
+        <!--Logging ti file-->
+        <!--<File name="File" fileName="log/burp-tlsattacker.log" immediateFlush="false" append="true">
+            <PatternLayout pattern="%d{HH:mm:ss}{GMT+0} [%t] %-5level: %c{1} - %msg%n%throwable"/>
+        </File>-->
+        <!--Additional WriterAppenders for Burp's stdout and stderr are added dynamically in BurpExtender.java-->
+    </Appenders>
+    <Loggers>
+        <!--
+        <Logger name="de.rub.nds.tlsscanner.ConsoleLogger" level="INFO">
+            <AppenderRef ref="console"/>
+        </Logger>
+        -->
+        <Logger name="de.rub.nds.burp.utilities" level="INFO"/>
+        
+        <Logger name="de.rub.nds.tlsscanner" level="INFO"/>
+        <Logger name="de.rub.nds.tlsattacker" level="ERROR"/>
+        <Logger name="de.rub.nds.modifiablevariable" level="ERROR"/>
+
+        <Root level="INFO">
+            <!--AppenderRefs for Burps stdout and stderr are added dynamically in BurpExtender.java -->
+
+            <!--Permanent logging to file log/burp-tlsattacker.log-->
+            <!--<AppenderRef ref="File" />-->
+        </Root>
+    </Loggers>
+</Configuration>

@@ -27,6 +27,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 import javax.swing.SwingWorker;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * TLS-Scanner.
@@ -34,7 +36,8 @@ import javax.swing.SwingWorker;
  * @author Nurullah Erinola
  */
 public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory {
-     
+    
+    private static final Logger LOGGER = LogManager.getLogger(UIScanner.class.getName());
     private UIScanHistory scanHistory;
     
     /**
@@ -323,6 +326,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
             
             @Override
             protected Boolean doInBackground() throws Exception {
+                LOGGER.info("---------- Start scanning of {} ----------", config.getClientDelegate().getHost());
                 // Init scanner and start scan
                 TlsScanner scanner = new TlsScanner(config);
                 report = scanner.scan();             
@@ -330,6 +334,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
             }
             @Override
             protected void done() {
+                LOGGER.info("---------- Scan of {} finished ----------", config.getClientDelegate().getHost());
                 jButtonScan.setEnabled(true);  
                 // Print scan result
                 SiteReportPrinter printer = new SiteReportPrinter(jTextPaneResult, report, config.getReportDetail());
