@@ -148,7 +148,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         jTextPaneResult.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
         jScrollPaneResult.setViewportView(jTextPaneResult);
 
-        jCheckBoxStarTls.setText("Scan STARTLS:");
+        jCheckBoxStarTls.setText("Scan STARTTLS:");
         jCheckBoxStarTls.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxStarTlsActionPerformed(evt);

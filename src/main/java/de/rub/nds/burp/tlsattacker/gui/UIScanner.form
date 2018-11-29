@@ -283,7 +283,7 @@
     </Container>
     <Component class="javax.swing.JCheckBox" name="jCheckBoxStarTls">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Scan STARTLS:"/>
+        <Property name="text" type="java.lang.String" value="Scan STARTTLS:"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxStarTlsActionPerformed"/>
