@@ -20,6 +20,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  * Scan History displays all scanned Hosts and their reports.
@@ -136,6 +137,11 @@ public class UIScanHistory extends javax.swing.JPanel {
             }
         });
         jScrollPaneTable.setViewportView(table);
+        
+        //Enable sorting
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>();
+        table.setRowSorter(sorter);
+        sorter.setModel(tableModel);       
     }
     
     public void add(ScannerConfig config, SiteReport report) {

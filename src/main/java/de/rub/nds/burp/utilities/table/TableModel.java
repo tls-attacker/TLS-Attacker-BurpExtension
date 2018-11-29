@@ -42,7 +42,8 @@ public class TableModel extends AbstractTableModel{
      */
     public void addRow(TableEntry entry){
         list.add(entry);
-        fireTableRowsInserted(list.size(),list.size());
+        int tmp = list.size()-1;
+        fireTableRowsInserted(tmp, tmp);
     }
     
     /**
@@ -92,7 +93,7 @@ public class TableModel extends AbstractTableModel{
     @Override
     public Class<?> getColumnClass(int columnIndex)
     {
-        return getValueAt(0, columnIndex).getClass();
+        return String.class;
     }
 
     /**
