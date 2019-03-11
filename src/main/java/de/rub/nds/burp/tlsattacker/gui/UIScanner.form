@@ -42,21 +42,25 @@
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                           <Component id="jComboBoxScanDetail" max="32767" attributes="0"/>
                                           <Component id="jComboBoxDangerLevel" alignment="0" min="-2" pref="118" max="-2" attributes="0"/>
-                                          <Component id="jTextFieldThreads" alignment="1" min="-2" pref="118" max="-2" attributes="0"/>
+                                          <Component id="jTextFieldThreads" alignment="1" max="32767" attributes="0"/>
                                       </Group>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" alignment="0" attributes="0">
-                                              <Component id="jTextFieldAggroLevel" min="-2" pref="118" max="-2" attributes="0"/>
+                                              <Component id="jTextFieldAggroLevel" max="32767" attributes="0"/>
                                               <EmptySpace type="separate" max="-2" attributes="0"/>
                                               <Component id="jCheckBoxImplementation" min="-2" max="-2" attributes="0"/>
                                           </Group>
-                                          <Component id="jComboBoxReportDetail" alignment="0" min="-2" pref="118" max="-2" attributes="0"/>
+                                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                              <Component id="jTextFieldTimeout" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="jComboBoxReportDetail" alignment="0" pref="118" max="32767" attributes="0"/>
+                                          </Group>
                                       </Group>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
@@ -116,6 +120,8 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jComboBoxDangerLevel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldTimeout" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
               <Component id="jButtonScan" min="-2" max="-2" attributes="0"/>
@@ -299,6 +305,19 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel8">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Timeout:"/>
+        <Property name="toolTipText" type="java.lang.String" value="The timeout used for the scans in ms."/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldTimeout">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="1000"/>
+        <Property name="toolTipText" type="java.lang.String" value="Enter numbers only."/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

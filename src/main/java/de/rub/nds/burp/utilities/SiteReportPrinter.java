@@ -13,8 +13,9 @@ import de.rub.nds.tlsattacker.attacks.constants.EarlyCcsVulnerabilityType;
 import static de.rub.nds.tlsattacker.attacks.constants.EarlyCcsVulnerabilityType.NOT_VULNERABLE;
 import static de.rub.nds.tlsattacker.attacks.constants.EarlyCcsVulnerabilityType.VULN_EXPLOITABLE;
 import static de.rub.nds.tlsattacker.attacks.constants.EarlyCcsVulnerabilityType.VULN_NOT_EXPLOITABLE;
+import de.rub.nds.tlsattacker.attacks.padding.VectorResponse;
+import de.rub.nds.tlsattacker.attacks.pkcs1.VectorFingerprintPair;
 import de.rub.nds.tlsattacker.attacks.util.response.EqualityError;
-import de.rub.nds.tlsattacker.attacks.util.response.ResponseFingerprint;
 import de.rub.nds.tlsattacker.core.constants.CipherSuite;
 import de.rub.nds.tlsattacker.core.constants.CompressionMethod;
 import de.rub.nds.tlsattacker.core.constants.ExtensionType;
@@ -32,9 +33,12 @@ import de.rub.nds.tlsscanner.probe.certificate.CertificateReport;
 import de.rub.nds.tlsscanner.report.CiphersuiteRater;
 import de.rub.nds.tlsscanner.report.PerformanceData;
 import de.rub.nds.tlsscanner.report.SiteReport;
+import de.rub.nds.tlsscanner.report.after.prime.CommonDhValues;
 import de.rub.nds.tlsscanner.report.result.VersionSuiteListPair;
+import de.rub.nds.tlsscanner.report.result.bleichenbacher.BleichenbacherTestResult;
 import de.rub.nds.tlsscanner.report.result.hpkp.HpkpPin;
 import de.rub.nds.tlsscanner.report.result.paddingoracle.PaddingOracleTestResult;
+import de.rub.nds.tlsscanner.report.result.statistics.RandomEvaluationResult;
 import java.awt.Color;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -85,12 +89,16 @@ public class SiteReportPrinter {
         appendCompressions();
         appendIntolerances();
         appendAttackVulnerabilities();
+        appendBleichenbacherResults();
+        appendPaddingOracleResults();
         appendGcm();
         appendRfc();
         appendCertificate();
         appendSession();
         appendRenegotiation();
         appendHttps();
+        appendRandom();
+        appendPublicKeyIssues();
         for (PerformanceData data : report.getPerformanceList()) {
             LOGGER.debug("Type: " + data.getType() + "   Start: " + data.getStarttime() + "    Stop: " + data.getStoptime());
         }
@@ -256,7 +264,6 @@ public class SiteReportPrinter {
         prettyAppendRedGreen("Ignores offered SigHashAlgos", report.getIgnoresOfferedSignatureAndHashAlgorithms());
         
     }
-
     private void appendAttackVulnerabilities() {
         prettyAppendHeading("Attack Vulnerabilities");
         prettyAppendRedGreen("Padding Oracle", report.getPaddingOracleVulnerable());
@@ -273,27 +280,83 @@ public class SiteReportPrinter {
         prettyAppendDrown("DROWN", report.getDrownVulnerable());
         prettyAppendRedGreen("Heartbleed", report.getHeartbleedVulnerable());
         prettyAppendEarlyCcs("EarlyCcs", report.getEarlyCcsVulnerable());
+    }
+
+    private void appendPaddingOracleResults() {
         prettyAppendHeading("PaddingOracle Details");
         if (report.getPaddingOracleTestResultList() == null || report.getPaddingOracleTestResultList().isEmpty()) {
             prettyAppend("No Testresults");
         } else {
             for (PaddingOracleTestResult testResult : report.getPaddingOracleTestResultList()) {
-                String resultString = addIndentations(testResult.getSuite().name()) + ": " + testResult.getVersion() + "   " 
-                        + testResult.getVectorGeneratorType() + "   " + testResult.getRecordGeneratorType();
-                if (testResult.getVulnerable() == Boolean.TRUE) {
-                    prettyAppendRed(resultString + "   - " + testResult.getEqualityError() + "   VULNERABLE");
+                String resultString = "" + padToLength(testResult.getSuite().name(), 40) + " - " + testResult.getVersion();
+                if (testResult.getVulnerable() == null || testResult.isHasScanningError()) {
+                    prettyAppendYellow(resultString + "\t  #Error during Scan");
+                } else if (testResult.getVulnerable() == Boolean.TRUE) {
+                    prettyAppendRed(resultString + "\t - " + testResult.getEqualityError() + "  VULNERABLE");
                 } else if (testResult.getVulnerable() == Boolean.FALSE) {
-                    prettyAppendGreen(resultString + "   - No Behavior Difference");
+                    prettyAppendGreen(resultString + "\t - No Behavior Difference");
+                }
+
+                if ((detail == ScannerDetail.DETAILED && testResult.getVulnerable() == Boolean.TRUE) || detail == ScannerDetail.ALL) {
+                    if (testResult.getEqualityError() != EqualityError.NONE || detail == ScannerDetail.ALL) {
+                        prettyAppendYellow("Response Map");
+                        if (testResult.getResponseMap() != null && testResult.getResponseMap() != null) {
+                            for (int i = 0; i < testResult.getResponseMap().size(); i++) {
+                                VectorResponse vectorResponse = testResult.getResponseMap().get(i);
+                                if (vectorResponse.isErrorDuringHandshake()) {
+                                    prettyAppendRed(padToLength("\t" + vectorResponse.getPaddingVector().getName(), 40) + "ERROR");
+                                } else if (vectorResponse.isMissingEquivalent()) {
+                                    prettyAppendRed(padToLength("\t" + vectorResponse.getPaddingVector().getName(), 40) + vectorResponse.getFingerprint().toHumanReadable());
+                                } else if (vectorResponse.isShaky()) {
+
+                                    prettyAppendYellow(padToLength("\t" + vectorResponse.getPaddingVector().getName(), 40) + vectorResponse.getFingerprint().toHumanReadable());
+                                    if (testResult.getResponseMapTwo() != null) {
+                                        VectorResponse secondRescanResponse = testResult.getResponseMapTwo().get(i);
+                                        if (secondRescanResponse != null && secondRescanResponse.getFingerprint() != null) {
+                                            prettyAppendYellow(padToLength("\t\t" + secondRescanResponse.getFingerprint().toHumanReadable(), 40));
+                                        }
+                                        if (testResult.getResponseMapThree() != null) {
+                                            VectorResponse thirdRescanResponse = testResult.getResponseMapThree().get(i);
+                                            if (thirdRescanResponse != null && thirdRescanResponse.getFingerprint() != null) {
+                                                prettyAppendYellow(padToLength("\t\t\t" + thirdRescanResponse.getFingerprint().toHumanReadable(), 40));
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    prettyAppend(padToLength("\t" + vectorResponse.getPaddingVector().getName(), 40) + vectorResponse.getFingerprint().toHumanReadable());
+                                }
+                            }
+
+                        } else {
+                            prettyAppend("\tNULL");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void appendBleichenbacherResults() {
+        prettyAppendHeading("Bleichenbacher Details");
+        if (report.getBleichenbacherTestResultList() == null || report.getBleichenbacherTestResultList().isEmpty()) {
+            prettyAppend("No Testresults");
+        } else {
+            for (BleichenbacherTestResult testResult : report.getBleichenbacherTestResultList()) {
+                String resultString = "" + padToLength(testResult.getWorkflowType().name(), 40);
+                if (testResult.getVulnerable() == Boolean.TRUE) {
+                    prettyAppendRed(resultString + "\t - " + testResult.getEqualityError() + "  VULNERABLE");
+                } else if (testResult.getVulnerable() == Boolean.FALSE) {
+                    prettyAppendGreen(resultString + "\t - No Behavior Difference");
                 } else {
-                    prettyAppendYellow(resultString + "   # Error during Scan");
+                    prettyAppendYellow(resultString + "\t # Error during Scan");
                 }
 
                 if (detail == ScannerDetail.DETAILED || detail == ScannerDetail.ALL) {
                     if (testResult.getEqualityError() != EqualityError.NONE || detail == ScannerDetail.ALL) {
                         prettyAppendYellow("Response Map");
-                        if (testResult.getResponseMap() != null && testResult.getResponseMap().get(0) != null) {
-                            for (ResponseFingerprint fingerprint : testResult.getResponseMap().get(0)) {
-                                prettyAppend("\t" + fingerprint.toString());
+                        if (testResult.getVectorFingerPrintPairList() != null && !testResult.getVectorFingerPrintPairList().isEmpty()) {
+                            for (VectorFingerprintPair vectorFingerPrintPair : testResult.getVectorFingerPrintPairList()) {
+                                prettyAppend(padToLength("\t" + vectorFingerPrintPair.getVector().getDescription(), 60) + vectorFingerPrintPair.getFingerprint().toHumanReadable());
                             }
                         } else {
                             prettyAppend("\tNULL");
@@ -302,7 +365,6 @@ public class SiteReportPrinter {
                 }
             }
         }
-        
     }
 
     private void appendCipherSuites() {
@@ -480,6 +542,36 @@ public class SiteReportPrinter {
         
     }
 
+    private void appendRandom() {
+        prettyAppendHeading("Nonce");
+        prettyAppendRandom("Random", report.getRandomEvaluationResult());
+    }
+
+    private void appendPublicKeyIssues() {
+        prettyAppendHeading("PublicKey Parameter");
+        prettyAppendRedGreen("EC PublicKey reuse", report.getEcPubkeyReuse());
+        prettyAppendRedGreen("DH PublicKey reuse", report.getDhPubkeyReuse());
+        prettyAppendRedGreen("Uses Common DH Primes", report.getUsesCommonDhPrimes());
+        if (report.getUsedCommonDhValueList().size() != 0) {
+            for (CommonDhValues value : report.getUsedCommonDhValueList()) {
+                prettyAppendRed("\t" + value.getName());
+            }
+        }
+        prettyAppendRedGreen("Uses Non-Prime Moduli", report.getUsesNonPrimeModuli());
+        prettyAppendRedGreen("Uses Nonsafe-Prime Moduli", report.getUsesNonSafePrimeModuli());
+        if (report.getWeakestDhStrength() != null) {
+            if (report.getWeakestDhStrength() < 1000) {
+                prettyAppendRed("DH Strength", "" + report.getWeakestDhStrength());
+            } else if (report.getWeakestDhStrength() < 2000) {
+                prettyAppendYellow("DH Strength", "" + report.getWeakestDhStrength());
+            } else if (report.getWeakestDhStrength() < 4100) {
+                prettyAppendGreen("DH Strength", "" + report.getWeakestDhStrength());
+            } else {
+                prettyAppendYellow("DH Strength", "" + report.getWeakestDhStrength());
+            }
+        }
+    }
+    
     private void prettyPrintCipherSuite(CipherSuite suite) {
         CipherSuiteGrade grade = CiphersuiteRater.getGrade(suite);
         switch (grade) {
@@ -741,6 +833,17 @@ public class SiteReportPrinter {
         append("\n");
     }
 
+    private void prettyAppendYellow(String name, String value) {
+        append(addIndentations(name) + ": ");
+        if(report.isNoColour() == false) {
+            appendWithColor(Colors.LIGHT_ORANGE, value);
+        } else {
+            append(value);
+        }
+        append("\n");
+    }
+
+    
     private void prettyAppendHeading(String value) {
         if(report.isNoColour() == false) {
             appendWithColor(Colors.DARK_BLUE, "\n--------------------------------------------------------\n" + value + "\n\n");
@@ -844,6 +947,32 @@ public class SiteReportPrinter {
             }
         }
         
+    }
+    
+    private void prettyAppendRandom(String testName, RandomEvaluationResult randomEvaluationResult) {
+        append(addIndentations(testName));
+        append(": ");
+        if (randomEvaluationResult == null) {
+            prettyAppend("Unknown");
+            return;
+        }
+        switch (randomEvaluationResult) {
+            case DUPLICATES:
+                prettyAppendRed("true - exploitable");
+                break;
+            case NOT_ANALYZED:
+                prettyAppend("Not Analyzed");
+                break;
+            case NOT_RANDOM:
+                prettyAppendRed("Does not seem to be Random");
+                break;
+            case UNIX_TIME:
+                prettyAppend("Contains UnixTime");
+                break;
+            case NO_DUPLICATES:
+                prettyAppendGreen("Good");
+                break;
+        }
     }
     
     private void appendWithColor(Color color, String string) {
