@@ -282,6 +282,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         list.add(ScannerDetail.ALL.toString());
         list.add(ScannerDetail.DETAILED.toString());
         list.add(ScannerDetail.NORMAL.toString());
+        list.add(ScannerDetail.QUICK.toString());
         jComboBoxScanDetail.setModel(new DefaultComboBoxModel(list.toArray())); 
         jComboBoxScanDetail.setSelectedIndex(2); 
         jComboBoxReportDetail.setModel(new DefaultComboBoxModel(list.toArray())); 
