@@ -66,7 +66,6 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jCheckBoxImplementation = new javax.swing.JCheckBox();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jTextFieldThreads = new javax.swing.JTextField();
@@ -105,18 +104,14 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
             }
         });
 
-        jLabel2.setText("Threads:");
-        jLabel2.setToolTipText("How many threads should execute Probes.");
+        jLabel2.setText("Parallel Probes:");
+        jLabel2.setToolTipText("Defines the number of threads responsible for different TLS probes. If set to 1, only one specific TLS probe (e.g., TLS version scan) can be run in time.");
 
-        jLabel4.setText("Aggro Level:");
-        jLabel4.setToolTipText("The level of concurrent handshakes (only applies to some resource intensive tests).");
+        jLabel4.setText("Overall Threads:");
+        jLabel4.setToolTipText("The maximum number of threads used to execute TLS probes located in the scanning queue. This is also the maximum number of threads communicating with the analyzed server.");
 
         jLabel5.setText("Danger Level:");
         jLabel5.setToolTipText("How aggressive the Scanner should test");
-
-        jCheckBoxImplementation.setText("Implementation");
-        jCheckBoxImplementation.setToolTipText("If you are interessted in the vulnerability of an implementation rather than a specific site.");
-        jCheckBoxImplementation.setEnabled(false);
 
         jLabel6.setText("Scan Detail:");
         jLabel6.setToolTipText("How detailed do you want to scan.");
@@ -125,11 +120,11 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         jLabel7.setToolTipText("How detailed do you want the report to be.");
 
         jTextFieldThreads.setText("4");
-        jTextFieldThreads.setToolTipText("Enter numbers only.");
+        jTextFieldThreads.setToolTipText("Enter only numbers.");
         jTextFieldThreads.setEnabled(false);
 
         jTextFieldAggroLevel.setText("100");
-        jTextFieldAggroLevel.setToolTipText("Enter numbers only.");
+        jTextFieldAggroLevel.setToolTipText("Enter only numbers.");
         jTextFieldAggroLevel.setEnabled(false);
 
         jComboBoxDangerLevel.setEnabled(false);
@@ -166,7 +161,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         jLabel8.setToolTipText("The timeout used for the scans in ms.");
 
         jTextFieldTimeout.setText("1000");
-        jTextFieldTimeout.setToolTipText("Enter numbers only.");
+        jTextFieldTimeout.setToolTipText("Enter only numbers.");
         jTextFieldTimeout.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -203,15 +198,11 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                                             .addComponent(jLabel4)
                                             .addComponent(jLabel7)
                                             .addComponent(jLabel8))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jTextFieldAggroLevel)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(jCheckBoxImplementation))
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(jTextFieldTimeout, javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jComboBoxReportDetail, javax.swing.GroupLayout.Alignment.LEADING, 0, 118, Short.MAX_VALUE))))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(jTextFieldTimeout, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jComboBoxReportDetail, 0, 118, Short.MAX_VALUE)
+                                            .addComponent(jTextFieldAggroLevel)))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jCheckBoxDefaultSetting)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -243,9 +234,8 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                     .addComponent(jLabel2)
                     .addComponent(jTextFieldThreads, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextFieldAggroLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(jCheckBoxImplementation))
-                .addGap(7, 7, 7)
+                    .addComponent(jLabel4))
+                .addGap(9, 9, 9)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBoxScanDetail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
@@ -264,7 +254,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                     .addComponent(jLabel3)
                     .addComponent(jButtonCopy))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneResult, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                .addComponent(jScrollPaneResult, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -313,8 +303,13 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         menuList.add(jMenuItemSendToScanner);
         return menuList;
     }
-    
+      
     private void jButtonScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonScanActionPerformed
+        // Check inputs
+        if(!jTextFieldThreads.getText().matches("[0-9]+") || !jTextFieldAggroLevel.getText().matches("[0-9]+") || !jTextFieldTimeout.getText().matches("[0-9]+")) {
+            jTextPaneResult.setText("Parallel Probes, Overall Threads or Timeout input is not a number or empty. Please enter only numbers!");
+            return;
+        }
         // Create config
         ScannerConfig config = new ScannerConfig(new GeneralDelegate());
         config.getClientDelegate().setHost(jTextFieldHost.getText());
@@ -327,7 +322,6 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
             config.setThreads(Integer.parseInt(jTextFieldThreads.getText()));
             config.setAggroLevel(Integer.parseInt(jTextFieldAggroLevel.getText()));
             config.setTimeout(Integer.parseInt(jTextFieldTimeout.getText()));
-            config.setImplementation(jCheckBoxImplementation.isSelected());
             config.setReportDetail(ScannerDetail.valueOf((String) jComboBoxReportDetail.getSelectedItem()));
             config.setScanDetail(ScannerDetail.valueOf((String) jComboBoxScanDetail.getSelectedItem()));
         }
@@ -358,7 +352,9 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                 printer.printFullReport();
                 jTextPaneResult.setCaretPosition(0);
                 // Send config and report to scan history
-                scanHistory.add(config, report);
+                if(report.getServerIsAlive()) {
+                    scanHistory.add(config, report);
+                }
             }
         };
         worker.execute();
@@ -373,7 +369,6 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
 
     private void jCheckBoxDefaultSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxDefaultSettingActionPerformed
         if(jCheckBoxDefaultSetting.isSelected()) {
-            jCheckBoxImplementation.setEnabled(false);
             jComboBoxDangerLevel.setEnabled(false);
             jComboBoxReportDetail.setEnabled(false);
             jComboBoxScanDetail.setEnabled(false);
@@ -381,7 +376,6 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
             jTextFieldThreads.setEnabled(false);
             jTextFieldTimeout.setEnabled(false);
         } else {
-            jCheckBoxImplementation.setEnabled(true);
             jComboBoxDangerLevel.setEnabled(true);
             jComboBoxReportDetail.setEnabled(true);
             jComboBoxScanDetail.setEnabled(true);
@@ -404,7 +398,6 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
     private javax.swing.JButton jButtonCopy;
     private javax.swing.JButton jButtonScan;
     private javax.swing.JCheckBox jCheckBoxDefaultSetting;
-    private javax.swing.JCheckBox jCheckBoxImplementation;
     private javax.swing.JCheckBox jCheckBoxNoColor;
     private javax.swing.JCheckBox jCheckBoxStarTls;
     private javax.swing.JComboBox<String> jComboBoxDangerLevel;

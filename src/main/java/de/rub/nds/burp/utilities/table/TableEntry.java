@@ -23,7 +23,6 @@ public class TableEntry {
     private String counter;
     private String host;
     private String danger;
-    private String implementation;
     private String noColor;
     private String scanDetail;
     private String reportDetail;
@@ -38,7 +37,6 @@ public class TableEntry {
         this.host = report.getHost();
         this.counter = Integer.toString(counter);
         this.danger = Integer.toString(config.getDangerLevel());
-        this.implementation = Boolean.toString(config.isImplementation());
         this.noColor = Boolean.toString(config.isNoColor());
         this.scanDetail = config.getScanDetail().toString();
         this.reportDetail = config.getReportDetail().toString();
@@ -63,10 +61,6 @@ public class TableEntry {
     
     public String getDanger() {
         return danger;
-    }
-    
-    public String getImplementation() {
-        return implementation;
     }
 
     public String getNoColor() {

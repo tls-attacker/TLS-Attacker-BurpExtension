@@ -50,17 +50,11 @@
                                           <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="jTextFieldAggroLevel" max="32767" attributes="0"/>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                                              <Component id="jCheckBoxImplementation" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                              <Component id="jTextFieldTimeout" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="jComboBoxReportDetail" alignment="0" pref="118" max="32767" attributes="0"/>
-                                          </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="jTextFieldTimeout" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="jComboBoxReportDetail" alignment="1" pref="118" max="32767" attributes="0"/>
+                                          <Component id="jTextFieldAggroLevel" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
@@ -107,9 +101,8 @@
                   <Component id="jTextFieldThreads" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jTextFieldAggroLevel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jCheckBoxImplementation" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jComboBoxScanDetail" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -131,7 +124,7 @@
                   <Component id="jButtonCopy" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPaneResult" pref="183" max="32767" attributes="0"/>
+              <Component id="jScrollPaneResult" pref="185" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -173,27 +166,20 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Threads:"/>
-        <Property name="toolTipText" type="java.lang.String" value="How many threads should execute Probes."/>
+        <Property name="text" type="java.lang.String" value="Parallel Probes:"/>
+        <Property name="toolTipText" type="java.lang.String" value="Defines the number of threads responsible for different TLS probes. If set to 1, only one specific TLS probe (e.g., TLS version scan) can be run in time."/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Aggro Level:"/>
-        <Property name="toolTipText" type="java.lang.String" value="The level of concurrent handshakes (only applies to some resource intensive tests)."/>
+        <Property name="text" type="java.lang.String" value="Overall Threads:"/>
+        <Property name="toolTipText" type="java.lang.String" value="The maximum number of threads used to execute TLS probes located in the scanning queue. This is also the maximum number of threads communicating with the analyzed server."/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
         <Property name="text" type="java.lang.String" value="Danger Level:"/>
         <Property name="toolTipText" type="java.lang.String" value="How aggressive the Scanner should test"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="jCheckBoxImplementation">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Implementation"/>
-        <Property name="toolTipText" type="java.lang.String" value="If you are interessted in the vulnerability of an implementation rather than a specific site."/>
-        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
@@ -211,14 +197,14 @@
     <Component class="javax.swing.JTextField" name="jTextFieldThreads">
       <Properties>
         <Property name="text" type="java.lang.String" value="4"/>
-        <Property name="toolTipText" type="java.lang.String" value="Enter numbers only."/>
+        <Property name="toolTipText" type="java.lang.String" value="Enter only numbers."/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTextFieldAggroLevel">
       <Properties>
         <Property name="text" type="java.lang.String" value="100"/>
-        <Property name="toolTipText" type="java.lang.String" value="Enter numbers only."/>
+        <Property name="toolTipText" type="java.lang.String" value="Enter only numbers."/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
@@ -315,7 +301,7 @@
     <Component class="javax.swing.JTextField" name="jTextFieldTimeout">
       <Properties>
         <Property name="text" type="java.lang.String" value="1000"/>
-        <Property name="toolTipText" type="java.lang.String" value="Enter numbers only."/>
+        <Property name="toolTipText" type="java.lang.String" value="Enter only numbers."/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>

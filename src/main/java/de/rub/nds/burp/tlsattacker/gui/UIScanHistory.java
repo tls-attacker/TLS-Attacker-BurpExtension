@@ -20,6 +20,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 
 /**
@@ -126,9 +128,9 @@ public class UIScanHistory extends javax.swing.JPanel {
         tableModel = new TableModel();
         table = new JTable(tableModel);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.addMouseListener(new MouseAdapter() {
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
-            public void mousePressed(MouseEvent event) {
+            public void valueChanged(ListSelectionEvent lse) {
                 SiteReport report = tableModel.getTableList().get(table.getSelectedRow()).getSiteReport();
                 ScannerConfig config = tableModel.getTableList().get(table.getSelectedRow()).getConfig();
                 SiteReportPrinter printer = new SiteReportPrinter(jTextPaneResult, report, config.getReportDetail());
