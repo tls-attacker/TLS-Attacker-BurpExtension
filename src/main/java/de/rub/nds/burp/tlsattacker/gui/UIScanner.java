@@ -68,8 +68,8 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jTextFieldThreads = new javax.swing.JTextField();
-        jTextFieldAggroLevel = new javax.swing.JTextField();
+        jTextFieldParallelProbes = new javax.swing.JTextField();
+        jTextFieldOverallThreads = new javax.swing.JTextField();
         jComboBoxDangerLevel = new javax.swing.JComboBox<>();
         jComboBoxReportDetail = new javax.swing.JComboBox<>();
         jComboBoxScanDetail = new javax.swing.JComboBox<>();
@@ -119,13 +119,13 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         jLabel7.setText("Report Detail:");
         jLabel7.setToolTipText("How detailed do you want the report to be.");
 
-        jTextFieldThreads.setText("4");
-        jTextFieldThreads.setToolTipText("Enter only numbers.");
-        jTextFieldThreads.setEnabled(false);
+        jTextFieldParallelProbes.setText("4");
+        jTextFieldParallelProbes.setToolTipText("Enter only numbers.");
+        jTextFieldParallelProbes.setEnabled(false);
 
-        jTextFieldAggroLevel.setText("100");
-        jTextFieldAggroLevel.setToolTipText("Enter only numbers.");
-        jTextFieldAggroLevel.setEnabled(false);
+        jTextFieldOverallThreads.setText("100");
+        jTextFieldOverallThreads.setToolTipText("Enter only numbers.");
+        jTextFieldOverallThreads.setEnabled(false);
 
         jComboBoxDangerLevel.setEnabled(false);
 
@@ -192,7 +192,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(jComboBoxScanDetail, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(jComboBoxDangerLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jTextFieldThreads, javax.swing.GroupLayout.Alignment.TRAILING))
+                                            .addComponent(jTextFieldParallelProbes, javax.swing.GroupLayout.Alignment.TRAILING))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel4)
@@ -202,7 +202,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                             .addComponent(jTextFieldTimeout, javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jComboBoxReportDetail, 0, 118, Short.MAX_VALUE)
-                                            .addComponent(jTextFieldAggroLevel)))
+                                            .addComponent(jTextFieldOverallThreads)))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jCheckBoxDefaultSetting)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -232,8 +232,8 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextFieldThreads, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldAggroLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldParallelProbes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldOverallThreads, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addGap(9, 9, 9)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -303,11 +303,58 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         menuList.add(jMenuItemSendToScanner);
         return menuList;
     }
-      
+
+    /**
+     * Check user inputs.
+     * @return True if checks failed.
+     */
+    private boolean checkInputs() {
+        boolean checkFailed = false;
+        jTextPaneResult.setText("");
+        // check Host
+        if(jTextFieldHost.getText() == null) {
+            jTextPaneResult.setText(jTextPaneResult.getText() + "-Could not parse provided host: " + jTextFieldHost.getText() + "\n");
+            checkFailed = true;
+        } else {
+            String[] parsedHost = jTextFieldHost.getText().split(":");
+            switch (parsedHost.length) {
+                case 1:
+                    break;
+                case 2:
+                    if(parsedHost[1].matches("[0-9]+")) {
+                        int port = Integer.parseInt(parsedHost[1]);
+                        if (port >= 0 && port <= 65535) {
+                            break;
+                        }
+                    }
+                    jTextPaneResult.setText(jTextPaneResult.getText() + "-Port must be in interval [0,65535], but is " + parsedHost[1] + "\n");
+                    checkFailed = true;
+                    break;
+                default:
+                    jTextPaneResult.setText(jTextPaneResult.getText() + "-Could not parse provided host: " + jTextFieldHost.getText() + "\n");
+                    checkFailed = true;
+                    break;
+            }
+        }
+        // check ParallelProbes, OverallThreads, Timeout
+        if(!jTextFieldParallelProbes.getText().matches("[0-9]+")) {
+            jTextPaneResult.setText(jTextPaneResult.getText() + "-Parallel Probes input is not a number or empty\n");
+            checkFailed = true;
+        }
+        if(!jTextFieldOverallThreads.getText().matches("[0-9]+")) {
+            jTextPaneResult.setText(jTextPaneResult.getText() + "-Overall Threads input is not a number or empty\n");
+            checkFailed = true;
+        }
+        if(!jTextFieldTimeout.getText().matches("[0-9]+")) {
+            jTextPaneResult.setText(jTextPaneResult.getText() + "-Timeout input is not a number or empty\n");
+            checkFailed = true;
+        }
+        return checkFailed;
+    }
+    
     private void jButtonScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonScanActionPerformed
-        // Check inputs
-        if(!jTextFieldThreads.getText().matches("[0-9]+") || !jTextFieldAggroLevel.getText().matches("[0-9]+") || !jTextFieldTimeout.getText().matches("[0-9]+")) {
-            jTextPaneResult.setText("Parallel Probes, Overall Threads or Timeout input is not a number or empty. Please enter only numbers!");
+        // Check user inputs
+        if(checkInputs()) {
             return;
         }
         // Create config
@@ -319,8 +366,8 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         config.setTimeout(1000);
         if(!jCheckBoxDefaultSetting.isSelected()) {
             config.setDangerLevel(Integer.parseInt((String) jComboBoxDangerLevel.getSelectedItem()));
-            config.setThreads(Integer.parseInt(jTextFieldThreads.getText()));
-            config.setAggroLevel(Integer.parseInt(jTextFieldAggroLevel.getText()));
+            config.setThreads(Integer.parseInt(jTextFieldParallelProbes.getText()));
+            config.setAggroLevel(Integer.parseInt(jTextFieldOverallThreads.getText()));
             config.setTimeout(Integer.parseInt(jTextFieldTimeout.getText()));
             config.setReportDetail(ScannerDetail.valueOf((String) jComboBoxReportDetail.getSelectedItem()));
             config.setScanDetail(ScannerDetail.valueOf((String) jComboBoxScanDetail.getSelectedItem()));
@@ -372,15 +419,15 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
             jComboBoxDangerLevel.setEnabled(false);
             jComboBoxReportDetail.setEnabled(false);
             jComboBoxScanDetail.setEnabled(false);
-            jTextFieldAggroLevel.setEnabled(false);
-            jTextFieldThreads.setEnabled(false);
+            jTextFieldOverallThreads.setEnabled(false);
+            jTextFieldParallelProbes.setEnabled(false);
             jTextFieldTimeout.setEnabled(false);
         } else {
             jComboBoxDangerLevel.setEnabled(true);
             jComboBoxReportDetail.setEnabled(true);
             jComboBoxScanDetail.setEnabled(true);
-            jTextFieldAggroLevel.setEnabled(true);
-            jTextFieldThreads.setEnabled(true);
+            jTextFieldOverallThreads.setEnabled(true);
+            jTextFieldParallelProbes.setEnabled(true);
             jTextFieldTimeout.setEnabled(true);
         }
     }//GEN-LAST:event_jCheckBoxDefaultSettingActionPerformed
@@ -413,9 +460,9 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPaneResult;
-    private javax.swing.JTextField jTextFieldAggroLevel;
     private javax.swing.JTextField jTextFieldHost;
-    private javax.swing.JTextField jTextFieldThreads;
+    private javax.swing.JTextField jTextFieldOverallThreads;
+    private javax.swing.JTextField jTextFieldParallelProbes;
     private javax.swing.JTextField jTextFieldTimeout;
     private javax.swing.JTextPane jTextPaneResult;
     // End of variables declaration//GEN-END:variables
