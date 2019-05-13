@@ -336,18 +336,20 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                     break;
             }
         }
-        // check ParallelProbes, OverallThreads, Timeout
-        if(!jTextFieldParallelProbes.getText().matches("[0-9]+")) {
-            jTextPaneResult.setText(jTextPaneResult.getText() + "-Parallel Probes input is not a number or empty\n");
-            checkFailed = true;
-        }
-        if(!jTextFieldOverallThreads.getText().matches("[0-9]+")) {
-            jTextPaneResult.setText(jTextPaneResult.getText() + "-Overall Threads input is not a number or empty\n");
-            checkFailed = true;
-        }
-        if(!jTextFieldTimeout.getText().matches("[0-9]+")) {
-            jTextPaneResult.setText(jTextPaneResult.getText() + "-Timeout input is not a number or empty\n");
-            checkFailed = true;
+        if(!jCheckBoxDefaultSetting.isSelected()) {
+            // check ParallelProbes, OverallThreads, Timeout
+            if(!jTextFieldParallelProbes.getText().matches("[0-9]+")) {
+                jTextPaneResult.setText(jTextPaneResult.getText() + "-Parallel Probes input is not a number or empty\n");
+                checkFailed = true;
+            }
+            if(!jTextFieldOverallThreads.getText().matches("[0-9]+")) {
+                jTextPaneResult.setText(jTextPaneResult.getText() + "-Overall Threads input is not a number or empty\n");
+                checkFailed = true;
+            }
+            if(!jTextFieldTimeout.getText().matches("[0-9]+")) {
+                jTextPaneResult.setText(jTextPaneResult.getText() + "-Timeout input is not a number or empty\n");
+                checkFailed = true;
+            }
         }
         return checkFailed;
     }
