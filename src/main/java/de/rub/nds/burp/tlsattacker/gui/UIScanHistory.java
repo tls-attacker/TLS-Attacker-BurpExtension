@@ -8,7 +8,7 @@
  */
 package de.rub.nds.burp.tlsattacker.gui;
 
-import de.rub.nds.burp.utilities.SiteReportPrinter;
+import de.rub.nds.burp.utilities.ReportPrinter;
 import de.rub.nds.burp.utilities.table.TableEntry;
 import de.rub.nds.burp.utilities.table.TableModel;
 import de.rub.nds.tlsscanner.config.ScannerConfig;
@@ -16,8 +16,6 @@ import de.rub.nds.tlsscanner.report.SiteReport;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -133,8 +131,9 @@ public class UIScanHistory extends javax.swing.JPanel {
             public void valueChanged(ListSelectionEvent lse) {
                 SiteReport report = tableModel.getTableList().get(table.getSelectedRow()).getSiteReport();
                 ScannerConfig config = tableModel.getTableList().get(table.getSelectedRow()).getConfig();
-                SiteReportPrinter printer = new SiteReportPrinter(jTextPaneResult, report, config.getReportDetail());
-                printer.printFullReport();
+                String fullReport = report.getFullReport(config.getReportDetail());
+                ReportPrinter printer = new ReportPrinter(jTextPaneResult, fullReport);
+                printer.print();
                 jTextPaneResult.setCaretPosition(0);
             }
         });

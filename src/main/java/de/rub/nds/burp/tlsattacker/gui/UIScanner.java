@@ -10,7 +10,7 @@ package de.rub.nds.burp.tlsattacker.gui;
 
 import burp.IContextMenuFactory;
 import burp.IContextMenuInvocation;
-import de.rub.nds.burp.utilities.SiteReportPrinter;
+import de.rub.nds.burp.utilities.ReportPrinter;
 import de.rub.nds.tlsattacker.core.config.delegate.GeneralDelegate;
 import de.rub.nds.tlsattacker.core.constants.StarttlsType;
 import de.rub.nds.tlsscanner.TlsScanner;
@@ -363,13 +363,13 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         ScannerConfig config = new ScannerConfig(new GeneralDelegate());
         config.getClientDelegate().setHost(jTextFieldHost.getText());
         config.setNoColor(jCheckBoxNoColor.isSelected());
-        config.setThreads(4);
-        config.setAggroLevel(100);
+        config.setParallelProbes(4);
+        config.setOverallThreads(100);
         config.setTimeout(1000);
         if(!jCheckBoxDefaultSetting.isSelected()) {
             config.setDangerLevel(Integer.parseInt((String) jComboBoxDangerLevel.getSelectedItem()));
-            config.setThreads(Integer.parseInt(jTextFieldParallelProbes.getText()));
-            config.setAggroLevel(Integer.parseInt(jTextFieldOverallThreads.getText()));
+            config.setParallelProbes(Integer.parseInt(jTextFieldParallelProbes.getText()));
+            config.setOverallThreads(Integer.parseInt(jTextFieldOverallThreads.getText()));
             config.setTimeout(Integer.parseInt(jTextFieldTimeout.getText()));
             config.setReportDetail(ScannerDetail.valueOf((String) jComboBoxReportDetail.getSelectedItem()));
             config.setScanDetail(ScannerDetail.valueOf((String) jComboBoxScanDetail.getSelectedItem()));
@@ -397,8 +397,9 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                 LOGGER.info("---------- Scan of {} finished ----------", config.getClientDelegate().getHost());
                 jButtonScan.setEnabled(true);  
                 // Print scan result
-                SiteReportPrinter printer = new SiteReportPrinter(jTextPaneResult, report, config.getReportDetail());
-                printer.printFullReport();
+                String fullReport = report.getFullReport(config.getReportDetail());
+                ReportPrinter printer = new ReportPrinter(jTextPaneResult, fullReport);
+                printer.print();
                 jTextPaneResult.setCaretPosition(0);
                 // Send config and report to scan history
                 if(report.getServerIsAlive()) {
