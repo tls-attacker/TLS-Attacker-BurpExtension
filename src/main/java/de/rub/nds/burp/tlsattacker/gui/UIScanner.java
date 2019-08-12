@@ -10,11 +10,12 @@ package de.rub.nds.burp.tlsattacker.gui;
 
 import burp.IContextMenuFactory;
 import burp.IContextMenuInvocation;
-import de.rub.nds.burp.utilities.ReportPrinter;
+import de.rub.nds.burp.utilities.ANSIHelper;
 import de.rub.nds.tlsattacker.core.config.delegate.GeneralDelegate;
 import de.rub.nds.tlsattacker.core.constants.StarttlsType;
 import de.rub.nds.tlsscanner.TlsScanner;
 import de.rub.nds.tlsscanner.config.ScannerConfig;
+import de.rub.nds.tlsscanner.constants.AnsiColors;
 import de.rub.nds.tlsscanner.constants.ScannerDetail;
 import de.rub.nds.tlsscanner.report.SiteReport;
 import java.awt.Toolkit;
@@ -397,9 +398,19 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                 LOGGER.info("---------- Scan of {} finished ----------", config.getClientDelegate().getHost());
                 jButtonScan.setEnabled(true);  
                 // Print scan result
-                String fullReport = report.getFullReport(config.getReportDetail());
-                ReportPrinter printer = new ReportPrinter(jTextPaneResult, fullReport);
-                printer.print();
+                String fullReport = "";
+                if(report != null) {
+                    fullReport = report.getFullReport(config.getReportDetail());
+                } else {
+                    fullReport = "Report for localhost:4433\n" + AnsiColors.ANSI_BOLD + AnsiColors.ANSI_BLUE + "\n------------------------------------------------------------\n" + "Supported Protocol Versions" + "\n\n" + AnsiColors.ANSI_RESET + "TLS10\nTLS11\nTLS12\n" + AnsiColors.ANSI_BOLD + AnsiColors.ANSI_BLUE + "\n------------------------------------------------------------\n" + "Versions" + "\n\n" + AnsiColors.ANSI_RESET + "SSL 2.0 : " + AnsiColors.ANSI_GREEN + "FALSE\n" + AnsiColors.ANSI_RESET + "|_\n |" + AnsiColors.ANSI_BOLD + AnsiColors.ANSI_PURPLE + AnsiColors.ANSI_UNDERLINE + "CERT" + "\n\n" + AnsiColors.ANSI_RESET;
+                    fullReport += addIndentations("CAMELLIA");
+                    fullReport += ": TRUE\n";
+                    fullReport += addIndentations("ARIA");
+                    fullReport += ": TRUE\n";
+                    fullReport += addIndentations("CHACHA20 POLY1305BLA");
+                    fullReport += ": TRUE\n";
+                }
+                jTextPaneResult.setStyledDocument(ANSIHelper.getStyledDocument(fullReport));
                 jTextPaneResult.setCaretPosition(0);
                 // Send config and report to scan history
                 if(report.getServerIsAlive()) {
@@ -410,6 +421,27 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         worker.execute();
     }//GEN-LAST:event_jButtonScanActionPerformed
 
+        private String addIndentations(String value) {
+        int depth = 0;
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < depth; i++) {
+            builder.append(" ");
+        }
+        builder.append(value);
+        if (value.length() + depth < 8) {
+            builder.append("\t\t\t\t ");
+        } else if (value.length() + depth < 16) {
+            builder.append("\t\t\t ");
+        } else if (value.length() + depth < 24) {
+            builder.append("\t\t ");
+        } else if (value.length() + depth < 32) {
+            builder.append("\t ");
+        } else {
+            builder.append(" ");
+        }
+        return builder.toString();
+    }
+    
     private void jButtonCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCopyActionPerformed
         String toCopy = jTextPaneResult.getText();
         StringSelection stringSelection = new StringSelection(toCopy);

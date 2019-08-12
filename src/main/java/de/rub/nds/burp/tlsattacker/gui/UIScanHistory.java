@@ -8,7 +8,7 @@
  */
 package de.rub.nds.burp.tlsattacker.gui;
 
-import de.rub.nds.burp.utilities.ReportPrinter;
+import de.rub.nds.burp.utilities.ANSIHelper;
 import de.rub.nds.burp.utilities.table.TableEntry;
 import de.rub.nds.burp.utilities.table.TableModel;
 import de.rub.nds.tlsscanner.config.ScannerConfig;
@@ -132,8 +132,7 @@ public class UIScanHistory extends javax.swing.JPanel {
                 SiteReport report = tableModel.getTableList().get(table.getSelectedRow()).getSiteReport();
                 ScannerConfig config = tableModel.getTableList().get(table.getSelectedRow()).getConfig();
                 String fullReport = report.getFullReport(config.getReportDetail());
-                ReportPrinter printer = new ReportPrinter(jTextPaneResult, fullReport);
-                printer.print();
+                jTextPaneResult.setStyledDocument(ANSIHelper.getStyledDocument(fullReport));
                 jTextPaneResult.setCaretPosition(0);
             }
         });
