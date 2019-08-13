@@ -24,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class ANSIHelper {
 
+    // self defined colors
     private static final Color LIGHT_ORANGE = new Color(255, 153, 0);
     private static final Color DARK_RED = new Color(204, 0, 0);
     private static final Color DARK_BLUE = new Color(0, 0, 204);
@@ -36,8 +37,8 @@ public class ANSIHelper {
     public static StyledDocument getStyledDocument(String report) {
         StyledDocument document = new DefaultStyledDocument();
         SimpleAttributeSet attributes = new SimpleAttributeSet();
-    
-        int currentPos = 0; // current char position in addString
+        
+        int currentPos = 0; // current char position in report
         int startIndex = 0; // start of escape sequence
         int endIndex = 0; // end of escape sequence
         
@@ -92,16 +93,16 @@ public class ANSIHelper {
 
     private static String replaceTabs(String string) {
         String[] splitted = string.split("\n", -1);
-        for(String split : splitted) {
-            int pos = split.indexOf("\t");
+        for(int i = 0; i < splitted.length; i++) {
+            int pos = splitted[i].indexOf("\t");
             while(pos != -1) {
-                split = split.replaceFirst("\t", StringUtils.repeat(" ", 8-(pos%8)));
-                pos = split.indexOf("\t");
+                splitted[i] = splitted[i].replaceFirst("\t", StringUtils.repeat(" ", 8-(pos%8)));
+                pos = splitted[i].indexOf("\t");
             }
         }
         return String.join("\n", splitted);
     }
-    
+
     private static StyledDocument append(StyledDocument document, SimpleAttributeSet attributes, String toAppend) {
         try {
            document.insertString(document.getLength(), replaceTabs(toAppend), attributes);

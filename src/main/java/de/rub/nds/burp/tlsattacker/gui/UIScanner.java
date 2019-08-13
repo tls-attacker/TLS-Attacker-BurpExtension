@@ -15,10 +15,8 @@ import de.rub.nds.tlsattacker.core.config.delegate.GeneralDelegate;
 import de.rub.nds.tlsattacker.core.constants.StarttlsType;
 import de.rub.nds.tlsscanner.TlsScanner;
 import de.rub.nds.tlsscanner.config.ScannerConfig;
-import de.rub.nds.tlsscanner.constants.AnsiColors;
 import de.rub.nds.tlsscanner.constants.ScannerDetail;
 import de.rub.nds.tlsscanner.report.SiteReport;
-import java.awt.FontMetrics;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -28,14 +26,7 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
-import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
-import javax.swing.text.TabSet;
-import javax.swing.text.TabStop;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -153,6 +144,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
             }
         });
 
+        jTextPaneResult.setEditable(false);
         jTextPaneResult.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         jScrollPaneResult.setViewportView(jTextPaneResult);
 
@@ -405,9 +397,8 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                 LOGGER.info("---------- Scan of {} finished ----------", config.getClientDelegate().getHost());
                 jButtonScan.setEnabled(true);  
                 // Print scan result
-                String fullReport = "";
                 if(report != null) {
-                    fullReport = report.getFullReport(config.getReportDetail());
+                    String fullReport = report.getFullReport(config.getReportDetail());
                     jTextPaneResult.setStyledDocument(ANSIHelper.getStyledDocument(fullReport));
                     jTextPaneResult.setCaretPosition(0);
                     // Send config and report to scan history
@@ -416,52 +407,11 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                     }
                 } else {
                     jTextPaneResult.setStyledDocument(ANSIHelper.getStyledDocument("Scan of " + config.getClientDelegate().getHost() + " failed..."));
-                    // TODO: Remove after test
-                    fullReport = "Report for localhost:4433\n" + AnsiColors.ANSI_BOLD + AnsiColors.ANSI_BLUE + "\n------------------------------------------------------------\n" + "Supported Protocol Versions" + "\n\n" + AnsiColors.ANSI_RESET + "TLS10\nTLS11\nTLS12\n" + AnsiColors.ANSI_BOLD + AnsiColors.ANSI_BLUE + "\n------------------------------------------------------------\n" + "Versions" + "\n\n" + AnsiColors.ANSI_RESET + "SSL 2.0 : " + AnsiColors.ANSI_GREEN + "FALSE\n" + AnsiColors.ANSI_RESET + "|_\n |" + AnsiColors.ANSI_BOLD + AnsiColors.ANSI_PURPLE + AnsiColors.ANSI_UNDERLINE + "CERT" + "\n\n" + AnsiColors.ANSI_RESET;
-                    fullReport += addIndentations("CAMELLI");
-                    fullReport += ": TRUE\n";
-                    fullReport += addIndentations("CAMELLIACAMELLIA");
-                    fullReport += ": TRUE\n";
-                    fullReport += addIndentations("ARIA");
-                    fullReport += ": TRUE\n";
-                    fullReport += addIndentations("CHACHA20 POLY1305BLA");
-                    fullReport += ": TRUE\n";
-                    fullReport += addIndentations("Ciphersuite Intolerant");
-                    fullReport += ": TRUE\n";
-                    fullReport += addIndentations("Version Intolerant");
-                    fullReport += ": TRUE\n";
-                    fullReport += addIndentations("RSA");
-                    fullReport += ": TRUE\n";
-                    fullReport += addIndentations("Kerberos");
-                    fullReport += ": TRUE\n";                  
-                    jTextPaneResult.setStyledDocument(ANSIHelper.getStyledDocument(fullReport));
                 }
             }
         };
         worker.execute();
     }//GEN-LAST:event_jButtonScanActionPerformed
- 
-    // TODO: Remove after test   
-    private String addIndentations(String value) {
-        int depth = 0;
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < depth; i++) {
-            builder.append(" ");
-        }
-        builder.append(value);
-        if (value.length() + depth < 8) {
-            builder.append("\t\t\t\t ");
-        } else if (value.length() + depth < 16) {
-            builder.append("\t\t\t ");
-        } else if (value.length() + depth < 24) {
-            builder.append("\t\t ");
-        } else if (value.length() + depth < 32) {
-            builder.append("\t ");
-        } else {
-            builder.append(" ");
-        }
-        return builder.toString();
-    }
     
     private void jButtonCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCopyActionPerformed
         String toCopy = jTextPaneResult.getText();
