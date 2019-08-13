@@ -62,7 +62,7 @@ public class UIScanHistory extends javax.swing.JPanel {
         jLabel2.setText("Report:");
 
         jTextPaneResult.setEditable(false);
-        jTextPaneResult.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        jTextPaneResult.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         jScrollPane2.setViewportView(jTextPaneResult);
 
         jButtonCopy.setText("Copy");

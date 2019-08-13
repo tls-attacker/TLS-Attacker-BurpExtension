@@ -10,13 +10,11 @@ package de.rub.nds.burp.utilities;
 
 import de.rub.nds.tlsscanner.constants.AnsiColors;
 import java.awt.Color;
-import java.util.Arrays;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -97,10 +95,7 @@ public class ANSIHelper {
         for(String split : splitted) {
             int pos = split.indexOf("\t");
             while(pos != -1) {
-                int modulo = pos%8;
-                int before = split.length();
                 split = split.replaceFirst("\t", StringUtils.repeat(" ", 8-(pos%8)));
-                int after = split.length();
                 pos = split.indexOf("\t");
             }
         }
