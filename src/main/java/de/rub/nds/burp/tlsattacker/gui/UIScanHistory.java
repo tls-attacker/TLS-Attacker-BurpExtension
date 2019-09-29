@@ -131,7 +131,7 @@ public class UIScanHistory extends javax.swing.JPanel {
             public void valueChanged(ListSelectionEvent lse) {
                 SiteReport report = tableModel.getTableList().get(table.getSelectedRow()).getSiteReport();
                 ScannerConfig config = tableModel.getTableList().get(table.getSelectedRow()).getConfig();
-                String fullReport = report.getFullReport(config.getReportDetail());
+                String fullReport = report.getFullReport(config.getReportDetail(), !config.isNoColor());
                 jTextPaneResult.setStyledDocument(ANSIHelper.getStyledDocument(fullReport));
                 jTextPaneResult.setCaretPosition(0);
             }

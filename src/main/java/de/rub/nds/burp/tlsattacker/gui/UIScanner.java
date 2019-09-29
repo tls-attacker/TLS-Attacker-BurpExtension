@@ -398,7 +398,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                 jButtonScan.setEnabled(true);  
                 // Print scan result
                 if(report != null) {
-                    String fullReport = report.getFullReport(config.getReportDetail());
+                    String fullReport = report.getFullReport(config.getReportDetail(), !config.isNoColor());
                     jTextPaneResult.setStyledDocument(ANSIHelper.getStyledDocument(fullReport));
                     jTextPaneResult.setCaretPosition(0);
                     // Send config and report to scan history

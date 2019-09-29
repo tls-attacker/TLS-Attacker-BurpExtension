@@ -3,7 +3,7 @@
 The extension is based on the [TLS-Attacker](https://github.com/RUB-NDS/TLS-Attacker) and developed by the [Chair for Network and Data Security from the Ruhr-University Bochum](http://nds.rub.de/) to assist pentesters and security researchers in the evaluation of TLS Server configurations with [Burp Suite](https://portswigger.net/burp).
 
 ## Build
-To compile the extension from source, you need to have Java and Maven installed, as well as [TLS-Attacker](https://github.com/RUB-NDS/TLS-Attacker) in Version 2.9 and [TLS-Scanner](https://github.com/RUB-NDS/TLS-Scanner) in Version 2.7.
+To compile the extension from source, you need to have Java and Maven installed, as well as [TLS-Attacker](https://github.com/RUB-NDS/TLS-Attacker) in Version 3.2 and [TLS-Scanner](https://github.com/RUB-NDS/TLS-Scanner) in Version 2.11.
 ```bash
 $ mvn clean package
 ```

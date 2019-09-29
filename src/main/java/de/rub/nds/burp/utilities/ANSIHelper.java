@@ -8,7 +8,7 @@
  */
 package de.rub.nds.burp.utilities;
 
-import de.rub.nds.tlsscanner.constants.AnsiColors;
+import de.rub.nds.tlsscanner.constants.AnsiColor;
 import java.awt.Color;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
@@ -113,38 +113,38 @@ public class ANSIHelper {
     } 
 
     private static SimpleAttributeSet parseAndAdd(SimpleAttributeSet attrSet, String ansi) {
-        switch(ansi) {
-            case AnsiColors.ANSI_RESET: 
+        switch(AnsiColor.getAnsiColor(ansi)) {
+            case RESET: 
                 attrSet = new SimpleAttributeSet();
                 break;        
-            case AnsiColors.ANSI_BLACK: 
+            case BLACK: 
                 attrSet.addAttribute(StyleConstants.Foreground, Color.BLACK);
                 break;
-            case AnsiColors.ANSI_RED: 
+            case RED: 
                 attrSet.addAttribute(StyleConstants.Foreground, DARK_RED);
                 break;
-            case AnsiColors.ANSI_GREEN: 
+            case GREEN: 
                 attrSet.addAttribute(StyleConstants.Foreground, DARK_GREEN);
                 break;
-            case AnsiColors.ANSI_YELLOW: 
+            case YELLOW: 
                 attrSet.addAttribute(StyleConstants.Foreground, LIGHT_ORANGE);
                 break;
-            case AnsiColors.ANSI_BLUE: 
+            case BLUE: 
                 attrSet.addAttribute(StyleConstants.Foreground, DARK_BLUE);
                 break;
-            case AnsiColors.ANSI_PURPLE: 
+            case PURPLE: 
                 attrSet.addAttribute(StyleConstants.Foreground, DARK_VIOLET);
                 break;
-            case AnsiColors.ANSI_CYAN: 
+            case CYAN: 
                 attrSet.addAttribute(StyleConstants.Foreground, Color.CYAN);
                 break;
-            case AnsiColors.ANSI_WHITE: 
+            case WHITE: 
                 attrSet.addAttribute(StyleConstants.Foreground, Color.WHITE);
                 break;
-            case AnsiColors.ANSI_BOLD: 
+            case BOLD: 
                 attrSet.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
                 break;
-            case AnsiColors.ANSI_UNDERLINE: 
+            case UNDERLINE: 
                 StyleConstants.setUnderline(attrSet, true);
                 break;
             default: 
