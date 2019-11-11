@@ -402,9 +402,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                     jTextPaneResult.setStyledDocument(ANSIHelper.getStyledDocument(fullReport));
                     jTextPaneResult.setCaretPosition(0);
                     // Send config and report to scan history
-                    if(report.getServerIsAlive()) {
-                        scanHistory.add(config, report);
-                    }
+                    scanHistory.add(config, report);
                 } else {
                     jTextPaneResult.setStyledDocument(ANSIHelper.getStyledDocument("Scan of " + config.getClientDelegate().getHost() + " failed..."));
                 }

@@ -141,6 +141,30 @@ public class ANSIHelper {
             case WHITE: 
                 attrSet.addAttribute(StyleConstants.Foreground, Color.WHITE);
                 break;
+            case BLACK_BACKGROUND:
+                attrSet.addAttribute(StyleConstants.Background, Color.BLACK);
+                break;
+            case RED_BACKGROUND:
+                attrSet.addAttribute(StyleConstants.Background, DARK_RED);
+                break;
+            case GREEN_BACKGROUND:
+                attrSet.addAttribute(StyleConstants.Background, DARK_GREEN);
+                break;
+            case YELLOW_BACKGROUND:
+                attrSet.addAttribute(StyleConstants.Background, LIGHT_ORANGE);
+                break;
+            case BLUE_BACKGROUND:
+                attrSet.addAttribute(StyleConstants.Background, DARK_BLUE);
+                break;
+            case PURPLE_BACKGROUND:
+                attrSet.addAttribute(StyleConstants.Background, DARK_VIOLET);
+                break;
+            case CYAN_BACKGROUND:
+                attrSet.addAttribute(StyleConstants.Background, Color.CYAN);
+                break;
+            case WHITE_BACKGROUND:
+                attrSet.addAttribute(StyleConstants.Background, Color.WHITE);
+                break;
             case BOLD: 
                 attrSet.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
                 break;
