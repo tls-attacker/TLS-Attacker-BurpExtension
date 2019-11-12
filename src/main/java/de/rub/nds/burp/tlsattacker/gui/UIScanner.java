@@ -10,7 +10,7 @@ package de.rub.nds.burp.tlsattacker.gui;
 
 import burp.IContextMenuFactory;
 import burp.IContextMenuInvocation;
-import de.rub.nds.burp.utilities.SiteReportPrinter;
+import de.rub.nds.burp.utilities.ANSIHelper;
 import de.rub.nds.tlsattacker.core.config.delegate.GeneralDelegate;
 import de.rub.nds.tlsattacker.core.constants.StarttlsType;
 import de.rub.nds.tlsscanner.TlsScanner;
@@ -145,7 +145,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         });
 
         jTextPaneResult.setEditable(false);
-        jTextPaneResult.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        jTextPaneResult.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         jScrollPaneResult.setViewportView(jTextPaneResult);
 
         jCheckBoxStarTls.setText("Scan STARTTLS:");
@@ -363,13 +363,13 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
         ScannerConfig config = new ScannerConfig(new GeneralDelegate());
         config.getClientDelegate().setHost(jTextFieldHost.getText());
         config.setNoColor(jCheckBoxNoColor.isSelected());
-        config.setThreads(4);
-        config.setAggroLevel(100);
+        config.setParallelProbes(4);
+        config.setOverallThreads(100);
         config.setTimeout(1000);
         if(!jCheckBoxDefaultSetting.isSelected()) {
             config.setDangerLevel(Integer.parseInt((String) jComboBoxDangerLevel.getSelectedItem()));
-            config.setThreads(Integer.parseInt(jTextFieldParallelProbes.getText()));
-            config.setAggroLevel(Integer.parseInt(jTextFieldOverallThreads.getText()));
+            config.setParallelProbes(Integer.parseInt(jTextFieldParallelProbes.getText()));
+            config.setOverallThreads(Integer.parseInt(jTextFieldOverallThreads.getText()));
             config.setTimeout(Integer.parseInt(jTextFieldTimeout.getText()));
             config.setReportDetail(ScannerDetail.valueOf((String) jComboBoxReportDetail.getSelectedItem()));
             config.setScanDetail(ScannerDetail.valueOf((String) jComboBoxScanDetail.getSelectedItem()));
@@ -378,7 +378,7 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
             config.getStarttlsDelegate().setStarttlsType(StarttlsType.valueOf((String) jComboBoxStarTLS.getSelectedItem()));
         }
         // Clarify scan start
-        jTextPaneResult.setText("Scanning " + config.getClientDelegate().getHost() + " - please be patient...");
+        jTextPaneResult.setStyledDocument(ANSIHelper.getStyledDocument("Scanning " + config.getClientDelegate().getHost() + " - please be patient..."));
         jButtonScan.setEnabled(false); 
         // Use SwingWorker to execute scan in backround
         SwingWorker<Boolean, Integer> worker = new SwingWorker<Boolean, Integer>() {           
@@ -397,18 +397,20 @@ public class UIScanner extends javax.swing.JPanel implements IContextMenuFactory
                 LOGGER.info("---------- Scan of {} finished ----------", config.getClientDelegate().getHost());
                 jButtonScan.setEnabled(true);  
                 // Print scan result
-                SiteReportPrinter printer = new SiteReportPrinter(jTextPaneResult, report, config.getReportDetail());
-                printer.printFullReport();
-                jTextPaneResult.setCaretPosition(0);
-                // Send config and report to scan history
-                if(report.getServerIsAlive()) {
+                if(report != null) {
+                    String fullReport = report.getFullReport(config.getReportDetail(), !config.isNoColor());
+                    jTextPaneResult.setStyledDocument(ANSIHelper.getStyledDocument(fullReport));
+                    jTextPaneResult.setCaretPosition(0);
+                    // Send config and report to scan history
                     scanHistory.add(config, report);
+                } else {
+                    jTextPaneResult.setStyledDocument(ANSIHelper.getStyledDocument("Scan of " + config.getClientDelegate().getHost() + " failed..."));
                 }
             }
         };
         worker.execute();
     }//GEN-LAST:event_jButtonScanActionPerformed
-
+    
     private void jButtonCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCopyActionPerformed
         String toCopy = jTextPaneResult.getText();
         StringSelection stringSelection = new StringSelection(toCopy);
