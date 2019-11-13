@@ -9,6 +9,27 @@ $ mvn clean package
 ```
 The extension has been tested with Java 1.8.
 
-## Installation and Usage
+## Installation
 - Build the JAR file as described above, or download it from [releases](https://github.com/RUB-NDS/TLS-Attacker-BurpExtension/releases).
 - Load the JAR file from the target folder into Burp's Extender.
+
+## Usage
+Use the URL and port of the tested server and start the scan.
+The scan can last up to one minute, depending on the availability of the server. 
+After the scan has been finished, you will find the following scanning output, for example:
+
+**Supported versions and cipher suites:**
+
+![Alt text](figures/tls-versions.png "TLS versions and cipher suites")
+
+**Analyzed attacks and vulnerabilities:**
+
+![Alt text](figures/tls-attacks.png "TLS vulnerabilities")
+
+**Resulting score based on the analyzed properties:**
+
+![Alt text](figures/tls-scoring.png "Security score")
+
+**Recommendations to improve your implementation configuration:**
+
+![Alt text](figures/tls-recommendations.png "Recommendations")
